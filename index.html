@@ -43,11 +43,15 @@
                                 <div class="mp-scroll">
                                 
                                 <li class="search-archive-li mp-pjax">
-                                    <a href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                    <a href="/2018/03/16/虚拟内存/">虚拟内存</a>
                                 </li>
                                 
                                 <li class="search-archive-li mp-pjax">
                                     <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
                                 </li>
                                 
                                 <li class="search-archive-li mp-pjax">
@@ -118,9 +122,11 @@
         <div id="pjax">
             <div class="pjax-hidden" style="display: none">
                 
-                    <a  data-pjax href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                    <a  data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
                 
                     <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
                 
                     <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
                 
@@ -174,19 +180,19 @@
                 
                 <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
             </div>
-            <h1 class="post-title"><a data-pjax href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+            <h1 class="post-title"><a data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
             </h1>
 
             <div class="post-meta">
                 Post on<span class="fa fa-clock-o"></span>
-                <time datetime="2018-03-31T04:06:36.000Z"
-                      itemprop="datePublished">2018-03-31</time>
+                <time datetime="2018-03-16T04:17:20.000Z"
+                      itemprop="datePublished">2018-03-16</time>
             </div>
         </header>
         <section class="post-excerpt">
             <p>
                 
-                <p>很多时候我们需要对新业务进行A/B测，也就是让一部分用户体验或者说测试新功能，根据问题反馈改进我们的产品。A/B测的好处就是便于发现问题，并且让问题保持在可控的范围内。在我的公司，对于重要的上线一般会先小流量，所谓的小流量就是说把正常线上的流量分一部分到新业务环境中，我们称为小流量环境。本质上来说就是一种A/B测。<br>
+                <p>不知道大家是否有思考过为什么我们的计算机除了运行操作系统外，还可以同时运行多个程序？大部分人一般是从cpu的角度来考虑的，如果是单核计算机，通过<code>并发</code>技术，快速的在不同的进程间切换，让用户感觉多个进程在好像在同时运行；如果是多核计算机，除了可以并发外，每个核之间还能<code>并行</code>处理，真正的达到了同时处理多个程序的目的。我们都说计算机运行中的程序都存在内存中，但是在当今随便一个程序就上百M，甚至有的游戏已经达到好几G的情况下，操作系统是如何实现同时运行多个程序的呢？这里就涉及到虚拟内存技术，简单的说虚拟内存就是计算机利用硬件和软件资源，将暂时不需要的数据存在硬盘空间中，需要时再交换进内存空间。由于我们的硬盘空间相比于主存大了很大，弥补了主存空间不足的缺陷，达到同时运行多个程序的目的。<br>
                 
             </p>
             
@@ -228,6 +234,32 @@
         <header class="post-header">
             <div class="tag-tile">
                 
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title"><a data-pjax href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2017-11-25T15:06:36.000Z"
+                      itemprop="datePublished">2017-11-25</time>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p>很多时候我们需要对新业务进行A/B测，也就是让一部分用户体验或者说测试新功能，根据问题反馈改进我们的产品。A/B测的好处就是便于发现问题，并且让问题保持在可控的范围内。在我的公司，对于重要的上线一般会先小流量，所谓的小流量就是说把正常线上的流量分一部分到新业务环境中，我们称为小流量环境。本质上来说就是一种A/B测。<br>
+                
+            </p>
+            
+        </section>
+    </article>
+    
+    <article class="post">
+
+        <header class="post-header">
+            <div class="tag-tile">
+                
                 
                 <a data-pjax href='/tags/algorithm/'>algorithm</a>
                 
@@ -239,7 +271,7 @@
 
             <div class="post-meta">
                 Post on<span class="fa fa-clock-o"></span>
-                <time datetime="2017-06-20T03:53:49.000Z"
+                <time datetime="2017-06-20T03:34:30.000Z"
                       itemprop="datePublished">2017-06-20</time>
             </div>
         </header>

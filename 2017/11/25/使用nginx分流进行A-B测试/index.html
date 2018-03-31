@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>使用nginx分流进行A/B测试 | pan D.wei&#39;s Blog</title>
+  <meta name="description" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/component.css" />
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <meta name="generator" content="pan D.wei's Blog">
+  <script src="http://static.duoshuo.com/embed.js"></script>
+  
+  
+  
+
+  
+
+</head>
+<body>
+<div class="container">
+    <div class="mp-pusher" id="mp-pusher">
+        <i id="scroll-up" class="fa fa-angle-up"></i>
+        <nav id="mp-menu" class="mp-menu">
+            <div class="mp-level">
+                <a data-pjax class="back-home" style="font-size: 20px" href="/"><h2 ><i class="fa fa-home"></i>
+                        Home</h2></a>
+                <ul class="first-level">
+                    <li>
+                        <a class="fa fa-archive" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Archive</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-archive"></i>
+                                Archive</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-archive" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2016/03/31/Linux-Command/">Linux Command</a>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-copy" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Categories</a>
+
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-copy"></i>
+                                Categories</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-category" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-tags" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Tags</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-tags"></i>
+                                Tags</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-tag" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>2</small>
+                                </li>
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li class="mp-pjax"><a class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a></li>
+                    <li><a class="fa fa-github" href="#">&nbsp;&nbsp;&nbsp;Github</a></li>
+
+                </ul>
+
+            </div>
+        </nav>
+        <div id="pjax">
+            <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                
+                    <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                
+                    <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                
+                    <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
+                
+                
+                
+                    <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
+            </div>
+            <nav class="nexus">
+                <li  style="border-left: 1px solid #c6d0da;">
+                    <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                
+                <div id="nav-container">
+                    <div class="post-navbar" style="line-height: 63px;display:none">
+                        <li id="navbar-title"><a href="#">使用nginx分流进行A/B测试</a></li>
+                        <li id="navbar-toc" style="border-left: none">
+                            <a style="padding-right: 15px">
+                                <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
+                            </a>
+                            <div class="hidden-box">
+                                <ul id="toc"></ul>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                
+            </nav>
+
+            <div class="scroller">
+            <div class="scroller-inner">
+
+
+<!-- -->
+<!--<body class="post-template">-->
+<!---->
+  
+
+<main class="content" role="main">
+    <article class="post" >
+    <span class="post-meta">
+                  <div class="tag-tile">
+                      
+                  </div>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">使用nginx分流进行A/B测试</h1>
+
+                    <div class="post-meta">
+                        Post on<span class="fa fa-clock-o"></span>
+                        <time datetime="2017-11-25T15:06:36.000Z"
+                              itemprop="datePublished">2017-11-25</time>
+                    </div>
+    </span>
+
+        <section class="post-content">
+            <p>很多时候我们需要对新业务进行A/B测，也就是让一部分用户体验或者说测试新功能，根据问题反馈改进我们的产品。A/B测的好处就是便于发现问题，并且让问题保持在可控的范围内。在我的公司，对于重要的上线一般会先小流量，所谓的小流量就是说把正常线上的流量分一部分到新业务环境中，我们称为小流量环境。本质上来说就是一种A/B测。<br><a id="more"></a><br>小流量的场景可以分为两种：对外提供的服务和对内的业务系统。这两种情况我们都能用nginx进行分流。比如，对外提供的服务可以通过划分地域，将具有固定前缀的ip分流到小流量环境。对内的业务系统通过这种分流方式就显得不那么灵活。首先对内的业务系统如果使用的人数比较少，通过ip前缀不好控制，配置过短的前缀可能把所有人或者其他部门的人加入小流量，配置过长就可能导致加的人不对，而且当部门内部的人ip比较分散的情况下，这种方式就很有局限性了。本文主要针对第二种情况，也就是对内部业务系统分流，提出一种比较灵活的方式。</p>
+<p>我们如果能在http request中加上某种标识，服务器（这里指nginx）就能判断该标识，让这个请求打到对应的机器上实现分流。比如使用python的web框架django，我们一般会写一个middleware，在process_response中按照一定的规则（可以是工号id），将这个标识种在cookies中。以后浏览器在向网站发起请求时，cookies就会带有这个标识，此时nginx将发挥作用，将其分流到其他机器。当然这种方式也存在一些弊端，由于这个标识是植入到cookies中的，公司内部使用同一域名的不同系统都会受到影响。假设abc.com/A/和abc.com/B/现在对应到公司内部的两个系统，访问abc.com/A/和访问abc.com/B/，cookies中都会带有这个标识。如果我们只想让该用户访问新版的abc.com/A/，而abc.com/B/不变。换句话说，访问abc.com/A/分流到小流量环境，abc.com/B/依然访问线上机器，这种情况可能会有问题。当然，对abc.com/A/和abc.com/B/使用不同的标识，然后使用nginx分流也是没问题的。另外，由于是在cookies中写入了字段，由于cookies本身的限制，写入的key也是有一定限制的。而且当这个key不用，或者是出问题时，用户只能通过清理浏览器cookies缓存把这个key去掉。</p>
+<p>更好的方式是在http header中加标识。第一，nginx本身支持解析http header字段，在配置文件中使用<strong>$http</strong>__name_of_the_header我们可以访问到任意http header字段。比如要访问http header的X_Http_Test，我们可以这么写$http_x _http_test，变量名忽略大小写。第二，我们不用在app层加逻辑往cookie中植入字段。第三，搭配Chrome插件<a href="https://chrome.google.com/webstore/search/modheader" target="_blank" rel="noopener">modheader</a>，自动会往每个请求的header中插入我们自定义的key和value，非常方便。第四，当小流量环境出现问题时，关闭modheader即可恢复到线上，非常灵活。</p>
+<h2 id="往http-header中插入key-value"><a href="#往http-header中插入key-value" class="headerlink" title="往http header中插入key-value"></a>往http header中插入key-value</h2><p>modheader的傻瓜式操作，我们只需要添加key-value即可，如下图是在modheader中定义两对key-value，这里使用xserverselect/split。</p>
+<p><img align="center" src="/img/nginx_split_1.png"></p>
+<p>开启modheader之后，每个请求自动在http header插入xserverselect/split。</p>
+<p><img align="center" src="/img/nginx_split_2.png"></p>
+<h2 id="配置nginx"><a href="#配置nginx" class="headerlink" title="配置nginx"></a>配置nginx</h2><p>单独写一个配置文件test.conf，如下</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">upstream</span> online &#123;</span><br><span class="line">     <span class="attribute">server</span> <span class="number">192.168.73.74:9369</span>;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="attribute">upstream</span> preview &#123;</span><br><span class="line">     <span class="attribute">server</span> <span class="number">192.168.73.75:9009</span>;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="attribute">map</span> <span class="variable">$http_xserverselect</span> <span class="variable">$test_backend</span> &#123;</span><br><span class="line">     <span class="attribute">default</span> online;</span><br><span class="line">     <span class="attribute">split</span> preview;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="section">server</span> &#123;</span><br><span class="line">     <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">     <span class="attribute">server_name</span> localhost;</span><br><span class="line">     <span class="attribute">proxy_set_header</span> Host <span class="variable">$http_host</span>;</span><br><span class="line">     <span class="comment">#access_log  /var/log/access.log;</span></span><br><span class="line">     <span class="comment">#error_log /var/log/nginx_err.log;</span></span><br><span class="line">     <span class="comment">#underscores_in_headers on;</span></span><br><span class="line">     <span class="attribute">location</span> /A &#123;</span><br><span class="line">         <span class="attribute">proxy_pass</span> http://<span class="variable">$test_backend</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="attribute">location</span> /B &#123;</span><br><span class="line">         <span class="attribute">proxy_pass</span> http://online;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>解释一下上面的配置，这里有两个upstream，一个指向online，也就是线上环境，另一个是preview，这里指小流量环境。我们在map里面定义默认情况下走online，当$http_xserverselect=split时，走preview。$http_xserverselect这个是什么呢？很明显就是在modheader里面我们定义的xserverselect。<strong>在nginx里面，http header的变量会在前面加http前缀。</strong>在server block中，我们对location A使用了这个配置，而location B走的是online。注意test_backend前面有一个<code>$</code>符号。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>在nginx.conf里面include我们刚才写的test.conf，然后启动nginx。假设我们要测试的网站是abc.com/A/和abc.com/B/。由于我们在test.conf里面定义的server是localhost，所以在浏览器中输入上面两个地址之后要代理到本地。在/etc/hosts文件中加上一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 abc.com</span><br></pre></td></tr></table></figure>
+<p>这样我们本地访问abc.com，请求都会打到自己机器上，然后通过nginx代理到其他机器。接下来就直接在浏览器访问abc.com/A/和abc.com/B/，到不同的机器上看log，或者直接用chrome调试者工具看remote address。</p>
+<p><img algn="center" src="/img/nginx_split_3.png"></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
+<li>如果想定义带有下划线的http header字段，如x_server_select，需要在nginx配置中开启underscores_in_headers，在test.conf中把对应的coment去掉。</li>
+</ul>
+
+        </section>
+        <hr/>
+        <nav class="pagination" style="width:auto" role="pagination">
+            
+            <a data-pjax class="newer-posts" href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">← Prev Post</a>
+            
+            <a class="share-button" data-original-title title>Share this Post</a>
+            
+            <a data-pjax class="older-posts" href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Next Post →</a>
+            
+        </nav>
+        <br/>
+        <br/>
+        <section id="comment">
+            <div id="comment-box"></div>
+        </section>
+
+
+    </article>
+</main>
+
+
+  
+<footer class="site-footer">
+    
+    <div class="inner">
+        <section class="copyright"><a href="/"></a> &copy; pan D.wei's Blog 2014</section>
+        <section class="poweredby">Published with <a target="_blank" href="http://hexo.io/">Hexo   </a> and Theme by <a target="_blank" href="https://github.com/yuche/hexo-theme-kael">Kael</a></section>
+    </div>
+</footer>
+</div>
+</div><!-- /scroller -->
+
+</div><!-- /pusher -->
+</div><!-- /container -->
+</div>
+
+<!-- Easter eggs -->
+
+<div class="egg animated">
+    <a id="close-button" href="#">X</a>
+    <div class="block">
+        <div class="loading">
+            <span class="ball1"></span>
+            <span class="ball2"></span>
+        </div>
+    </div>
+</div>
+  
+<script src="//cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        var script = document.createElement('script');
+        script.src = "/js/jquery.min.js";
+        document.body.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="/js/lib.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>
