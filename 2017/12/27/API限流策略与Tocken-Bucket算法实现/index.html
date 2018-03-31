@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>API限流策略与Tocken Bucket算法实现 | pan D.wei&#39;s Blog</title>
+  <meta name="description" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/component.css" />
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <meta name="generator" content="pan D.wei's Blog">
+  <script src="http://static.duoshuo.com/embed.js"></script>
+  
+  
+  
+
+  
+
+</head>
+<body>
+<div class="container">
+    <div class="mp-pusher" id="mp-pusher">
+        <i id="scroll-up" class="fa fa-angle-up"></i>
+        <nav id="mp-menu" class="mp-menu">
+            <div class="mp-level">
+                <a data-pjax class="back-home" style="font-size: 20px" href="/"><h2 ><i class="fa fa-home"></i>
+                        Home</h2></a>
+                <ul class="first-level">
+                    <li>
+                        <a class="fa fa-archive" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Archive</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-archive"></i>
+                                Archive</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-archive" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2016/03/31/Linux-Command/">Linux Command</a>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-copy" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Categories</a>
+
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-copy"></i>
+                                Categories</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-category" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-tags" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Tags</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-tags"></i>
+                                Tags</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-tag" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>2</small>
+                                </li>
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li class="mp-pjax"><a class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a></li>
+                    <li><a class="fa fa-github" href="#">&nbsp;&nbsp;&nbsp;Github</a></li>
+
+                </ul>
+
+            </div>
+        </nav>
+        <div id="pjax">
+            <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                
+                    <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                
+                    <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
+                
+                
+                
+                    <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
+            </div>
+            <nav class="nexus">
+                <li  style="border-left: 1px solid #c6d0da;">
+                    <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                
+                <div id="nav-container">
+                    <div class="post-navbar" style="line-height: 63px;display:none">
+                        <li id="navbar-title"><a href="#">API限流策略与Tocken Bucket算法实现</a></li>
+                        <li id="navbar-toc" style="border-left: none">
+                            <a style="padding-right: 15px">
+                                <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
+                            </a>
+                            <div class="hidden-box">
+                                <ul id="toc"></ul>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                
+            </nav>
+
+            <div class="scroller">
+            <div class="scroller-inner">
+
+
+<!-- -->
+<!--<body class="post-template">-->
+<!---->
+  
+
+<main class="content" role="main">
+    <article class="post" >
+    <span class="post-meta">
+                  <div class="tag-tile">
+                      
+                      
+                      <a data-pjax href='/tags/algorithm/' style='color:#D5D5D5'>algorithm</a>
+                      
+                      
+                  </div>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">API限流策略与Tocken Bucket算法实现</h1>
+
+                    <div class="post-meta">
+                        Post on<span class="fa fa-clock-o"></span>
+                        <time datetime="2017-12-27T03:59:01.000Z"
+                              itemprop="datePublished">2017-12-27</time>
+                    </div>
+    </span>
+
+        <section class="post-content">
+            <p>高可用和高可靠一直是web应用和api接口关注的目标。尤其对于api提供方，很可能面临着一个激增的流量影响服务的稳定性，导致机器的负载飙高的风险。如果流量持续上涨，并且不采取措施，可能会把机器打挂，并且是一台机器挂了之后，剩下的机器挂的更快。<br><a id="more"></a><br>笔者在工作中就遇到一个坑，上线之后导致api提供方的负载逐步增加，并且没有停下来的迹象。为避免把机器打挂，对方把这个接口拒绝服务了，简单粗暴。大家可能会好奇为什么不回滚呢？其实场景是这样的：因为笔者发现线上ES经常出现脏数据，这种情况往往是因为有人使用了线上ES配置进行开发或者测试，在不知情的情况下，往ES写了线下数据。当然，这种情况是因为开发测试流程不规范导致的，但是总是有人喜欢直接使用线上配置进行调试开发，以图方便。导致笔者经常需要跑脚本清理这些脏数据。考虑到在ES上加权限控制的成本与的确有场景需要使用线上ES的情况，笔者打算在代码逻辑上控制非线上机器的写ES权限。大概的逻辑就是在写ES时，判断当前机器的tag（用于判断机器的环境）与使用的ES配置。如果tag是线下机器并且ES配置是线上的，直接提示not allow。这样相当于<strong>在每次写ES时，都会做这个判断</strong>。问题出在获取机器tag的函数，笔者调用的是其他项目组维护的代码，并且不在同一个代码仓库，而这个函数封装了对api接口的调用（居然没有加缓存）。如果写ES的操作不是很频繁还好，但是因为我们在代码中对数据库操作做了一些hook来保证ES与数据库的数据一致，并且还有一些兜底策略来保证数据一致性。因此，ES写操作非常频繁，写操作QPS峰值能达到1k以上。而获取tag的服务明显是一个内部服务，一般的用途也只是在脚本启动时调用一次判断当前环境，显然抗压能力是很有限的。由于笔者没有对该函数进行跟踪，误以为函数的工作方式是获取机器的环境变量。因此直到对方拒绝服务，我方不断报警之后才发现。其他的细节就不过多叙述了，反思本次经历，对方将接口直接拒绝服务的做法没有问题，毕竟是一种保护措施。其实可以有一种更温和的方式，就是对api进行限流。</p>
+<p>api限流在以下几种方式可以提高接口的可靠性：</p>
+<ul>
+<li>某一个用户可能占用过多流量，导致其他用户的服务受到影响。这个用户可能在使用脚本调用时，没有做频控，或者忽略了。更糟糕的情况就是他在恶意攻击你的接口，让你无法为其他用户提供服务，也就是Dos或者DDos。</li>
+<li>某一个用户发送了过多低优先级的请求，导致某些高优先级或核心的服务受到影响。</li>
+<li>系统出现问题，可能是基础服务的问题，此时接口无法承载平时的流量了，我们可以放弃某些低优先级的接口，确保核心服务的正常。</li>
+</ul>
+<p>限流作为确保api接口可靠性最有效的方法之一，可以有多种策略。</p>
+<ul>
+<li>最有效和常用的方法就是请求限流，就是说限制一个用户在每秒钟只能发送N个请求。</li>
+<li>并发限流。限制用户在同一时间只能发出N个请求。接口调用方可能使用了一定规模的并发数来调用接口，并发规模超过了接口的承载能力。调用方对于失败的接口（可能因为没排上队而失败了）加入了retry策略。后果就是恶性循环，失败的调用一直在retry，新的调用也失败了，然后也在retry，并发数一直在堆积，最终雪崩。并发限流要求用户使用新的编程模型，避免这种情况。</li>
+<li>基于使用量的限流。将流量划分为关键api和非关键api，限定每秒钟能够处理的请求数N。假设我们为关键api设定的访问量为20%，那么非关键api访问量超过80%*N的将被抛弃。</li>
+<li>基于worker利用率的限流。还是将api进行评级，从高优先级到低优先级区分出几个类别，也可以按照http method进行划分。当worker繁忙时，从最低优先级的api开始抛弃，直到worker恢复正常在逐步恢复对不同优先级的响应。</li>
+</ul>
+<hr>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>从api调用方和api提供方的角度来介绍一下如何使用<strong>python</strong>实现限流，并且会介绍一种在限流上经常使用的<strong>Token Bucket算法</strong>。    </p>
+<p>###api调用方限流</p>
+<p>搜了一把发现python有一个叫ratelimit的module，实现很简单，直接贴源码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> floor</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rate_limited</span><span class="params">(period=<span class="number">1</span>, every=<span class="number">1.0</span>)</span>:</span></span><br><span class="line">    frequency = abs(every) / float(clamp(period))</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></span><br><span class="line"></span><br><span class="line">      	last_called = [<span class="number">0.0</span>]</span><br><span class="line">        lock = threading.RLock()</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kargs)</span>:</span></span><br><span class="line">            <span class="keyword">with</span> lock:</span><br><span class="line">                elapsed = time.time() - last_called[<span class="number">0</span>]</span><br><span class="line">                left_to_wait = frequency - elapsed</span><br><span class="line">                <span class="keyword">if</span> left_to_wait &gt; <span class="number">0</span>:</span><br><span class="line">                    time.sleep(left_to_wait)</span><br><span class="line">                last_called[<span class="number">0</span>] = time.time()</span><br><span class="line">            <span class="keyword">return</span> func(*args, **kargs)</span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clamp</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> max(<span class="number">1</span>, min(sys.maxsize, floor(value)))</span><br></pre></td></tr></table></figure>
+<p>原理很简单，就是判断当前时间戳与上一次调用的时间戳的差值elapsed是否大于frequency，而这个frequency的计算就是拿时间除以调用次数得到的每隔多少时间可以调用一次。当elapsed大于frequency，说明程序在一段时间内没有调用过该函数了，因此可以直接调用；否则，sleep一段时间。</p>
+<p>由于rate_limited实现为decorator的方式，因此使用上也很方便，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ratelimit <span class="keyword">import</span> rate_limited</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="meta">@rate_limited(1)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">call_api</span><span class="params">(self, url)</span>:</span></span><br><span class="line">  response = requests.get(url)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> response.status_code != <span class="number">200</span>:</span><br><span class="line">    <span class="keyword">raise</span> ApiError(<span class="string">'Cannot call API: &#123;&#125;'</span>.format(response.status_code))</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+<p>看使用代码就知道了，这个ratelimit适用于api调用方，也就是在使用别人的接口时，这个module可以帮你做頻控，在一定程度上确保你不会打挂别人的机器。    </p>
+<hr>
+<p>###api提供方限流</p>
+<p>服务提供方的情况远比使用方复杂，想象一个接口A可能存在成千上万的调用方，我们想要分别限制每个调用方在1秒内，1分钟内，1小时内，甚至1天内能调用的次数。</p>
+<h4 id="Tocken-Bucket"><a href="#Tocken-Bucket" class="headerlink" title="Tocken Bucket"></a>Tocken Bucket</h4><p>最容易想到的就是利用<a href="https://redis.io/commands/incr" target="_blank" rel="noopener">redis incr</a>命令来做限流，在redis文档中有详细的介绍。简单来说，就是为每一个caller生成一个带ttl的key，每访问一次api就incr一次，直到超过一定的限度就禁止访问了。当key过期被redis自动删除之后，又恢复访问。这个算法实现起来很容易，而且能解决大部分问题，称得上简单实用。但是这个算法也存在一个问题。考虑一个场景，现在要限制接口A每分钟能被单个调用方访问100次。那用户就可以在某一分钟的结尾发送100个请求，在下一分钟的开头发出100个请求。这样QPS峰值可以达到原来的两倍，可能被恶意攻击者利用。另外这种限流策略很不均匀，对用户也不够友好。正常的用户可能在前10s发送了90个请求，这时候即使过了40s，用户也只能在发送10个请求。理想情况的限流是均匀的。什么意思呢？就是说我们在前10s发送了90个请求，过了40s之后，我们能请求的数量应该是要大于10个的，因为我们的访问量是会<code>恢复</code>的。把请求配额想象成一个桶，这个桶最多能放100滴的水。有一个水龙头在不停的往桶里面滴水，频率是0.6s一滴，1分钟刚好是100滴。也就是说，1分钟就能把一个空桶装满，桶满了之后就会溢出，所以最多只能装100滴。假设在第10s的时候桶里面的水只剩下10滴了，那40s之后还有多少滴水呢？答案是40/0.6+10约等于76。就是说，1分钟的前10s我们消耗了90个请求，40s之后，我们能在访问76次（期间没有消耗）。把水滴想象成一个令牌，当请求来了之后就去桶里面取一个令牌，只有获取到令牌的请求才能访问接口，这就是所谓的tocken bucket算法了。</p>
+<p><img src="http://59.110.225.250/static/images/works/api_rate_limit_01.png" alt=""></p>
+<p>考虑一下实现问题，假设接口A想实现1s访问5次的限流，也就是每0.2s就往bucket里放入一个tocken。这个接口是一个比较重要的接口，因为它的调用方很多，可能达到了10k。每个调用方需要用一个bucket来存数据，这样就存在10k个bucket。如果用一个线程来做定时器，定时往bucket放tocken，那就需要10k个线程。很明显这种方式是不可能的，即使可以开销也太大了。tocken的计算方式其实不需要定时器就能完成，本文前面就已经用到了这个方法。首先令牌的放入速率v我们是知道的，因为这个可以通过桶的容量capacity和装满桶需要的时间expire计算出来，<code>v=capacity/expire</code>。当用户U访问我们的接口时，我们只需要计算他上一次访问到当前访问的时间差需要补充多少个tocken，补充的token数不能超过桶的容量。最终我们得到下面的计算式子：</p>
+<blockquote>
+<p>token = min(max_capacity, (cur_time - last_time)*v)</p>
+</blockquote>
+<p>这样，我们只需要在每次访问到达的时候，才更新桶内的token。如果桶内有多余的token就让请求生效。好处也是可想而知的：</p>
+<ul>
+<li>不需要维护定时器来更新每个桶的token</li>
+<li>只在一个用户请求到来时更新token，节省了很多不必要的开销，也使得代码实现变得简单</li>
+</ul>
+<p>现在来考虑桶的数据存储和数据结构问题。在所有请求到达接口之前都需要获取token。因此限流算法的实现不能成为api的瓶颈，在响应上要尽量快。本文决定使用redis来实现，既兼顾数据存储又兼顾速度。根据上文的描述，每个桶需要存储的数据有最后一次访问的时间戳和桶中剩余的token数量。每个用户到每个api接口上都应该有对应的桶，不能共用。综上，桶的数据结构决定用redis hash，每个bucket的key由二元组(caller, api)来构造。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KEY: (caller, api)</span><br><span class="line">VALUE:</span><br><span class="line">&#123;</span><br><span class="line">  last_timestamp,</span><br><span class="line">  tokens </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如下代码是基于python django框架实现的bucket token算法，分别实现为中间件和修饰器的形式。中间件使用白名单机制，可以对不同的api做一些简单的配置，目的在于为一些关键api提供最基本的保障。因此中间件的灵活性比较有限。为了获得更大的灵活性，提供一个修饰器函数，在需要限流的地方加上即可。对于访问过于频繁的请求，我们直接返回503（service unavailable），对于没有获取到caller的请求，则返回403（forbidden）。</p>
+<blockquote>
+<p>api_rate_limit/const.py</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> django.http <span class="keyword">import</span> HttpResponse</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># bucket key。 根据不同caller,不同api构造一个bucket</span></span><br><span class="line">CALLER_KEY_TPL = <span class="string">'API_RATE_LIMIT|&#123;0&#125;|&#123;1&#125;'</span></span><br><span class="line">ONE_HOUR = <span class="number">60</span> * <span class="number">60</span></span><br><span class="line">MICROSECOND = <span class="number">1000000</span></span><br><span class="line">BASE_TIME = int(time.mktime(datetime.datetime(<span class="number">2017</span>, <span class="number">1</span>, <span class="number">1</span>).timetuple())) * MICROSECOND</span><br><span class="line"></span><br><span class="line">RequestTooFrequentRsp = HttpResponse(<span class="string">'Requests Are Too Frequent To Be '</span></span><br><span class="line">                                     <span class="string">'Temporarily Rejected Or Need Whitelist '</span></span><br><span class="line">                                     <span class="string">'Authorization'</span>, status=<span class="number">503</span>)</span><br><span class="line"></span><br><span class="line">MissingCallerRsp = HttpResponse(<span class="string">'Missing caller identification to '</span></span><br><span class="line">                                <span class="string">'access the api.'</span>, status=<span class="number">403</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 中间件使用白名单机制。</span></span><br><span class="line">rate_limit_conf = &#123;</span><br><span class="line">    <span class="string">'core'</span>: &#123;</span><br><span class="line">        <span class="string">'routes'</span>: &#123;<span class="string">'/my_test/'</span>, <span class="string">'/my_test/haha/'</span>&#125;,</span><br><span class="line">        <span class="string">'strategy'</span>: [</span><br><span class="line">            (<span class="number">5</span>, <span class="number">1</span>, <span class="number">1</span>*MICROSECOND/<span class="number">5</span>),</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># lua实现hset脚本</span></span><br><span class="line">lua_hset_script = <span class="string">'''</span></span><br><span class="line"><span class="string">local i = 2</span></span><br><span class="line"><span class="string">while(i&lt;#ARGV) do</span></span><br><span class="line"><span class="string">    redis.call('hset', KEYS[1], ARGV[i], ARGV[i+1])</span></span><br><span class="line"><span class="string">    i = i+2</span></span><br><span class="line"><span class="string">    end</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">redis.call('expire', KEYS[1], ARGV[1])</span></span><br><span class="line"><span class="string">return 1</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>api_rate_limit/api_rate_limit.py</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"><span class="keyword">from</span> django.utils.deprecation <span class="keyword">import</span> MiddlewareMixin</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> vivi_data.common.api_rate_limit.const <span class="keyword">import</span> (</span><br><span class="line">    RequestTooFrequentRsp,</span><br><span class="line">    CALLER_KEY_TPL,</span><br><span class="line">    lua_hset_script,</span><br><span class="line">    MissingCallerRsp,</span><br><span class="line">    ONE_HOUR,</span><br><span class="line">    BASE_TIME,</span><br><span class="line">    MICROSECOND,</span><br><span class="line">    rate_limit_conf</span><br><span class="line">)</span><br><span class="line"><span class="keyword">from</span> vivi_data.common.redis_client <span class="keyword">import</span> redis_cli <span class="keyword">as</span> redis_cli</span><br><span class="line"></span><br><span class="line">_lua_hset_script = redis_cli.register_script(lua_hset_script)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_get_timestamp</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    获取当前时间减去固定值的时间戳。</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">return</span> long(time.time() * MICROSECOND - BASE_TIME)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_get_caller</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    获取调用方标识。不带标识的时候使用ip</span></span><br><span class="line"><span class="string">    :param request: [obj] 请求对象</span></span><br><span class="line"><span class="string">    :return: [string]</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    caller = <span class="keyword">None</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'GET'</span>:</span><br><span class="line">        caller = request.GET.get(<span class="string">'caller'</span>)</span><br><span class="line">    <span class="keyword">elif</span> request.method == <span class="string">'POST'</span>:</span><br><span class="line">        caller = request.POST.get(<span class="string">'caller'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 不带caller则使用ip</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> caller:</span><br><span class="line">        caller = request.META.get(<span class="string">'REMOTE_ADDR'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> caller</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_lua_hset</span><span class="params">(keys, args, expire)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    使用lua脚本实现hset,保证写redis操作的原子性</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param keys: [string] redis key</span></span><br><span class="line"><span class="string">    :param args: [list] [h_key, h_value, h_key, h_value ...]</span></span><br><span class="line"><span class="string">    :param expire: key的过期时间</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :return: 0/1</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">global</span> _lua_hset_script</span><br><span class="line">    args.insert(<span class="number">0</span>, expire)</span><br><span class="line">    pipe = redis_cli.pipeline()</span><br><span class="line"></span><br><span class="line">    ret = [<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        _lua_hset_script(keys, args, pipe)</span><br><span class="line">        ret = pipe.execute()</span><br><span class="line">    <span class="keyword">except</span> Exception:</span><br><span class="line">        <span class="comment"># need some alarm mechanism</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ret[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIRateLimitMiddleware</span><span class="params">(MiddlewareMixin)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    api限流中间件。</span></span><br><span class="line"><span class="string">    支持HTTP POST和GET method</span></span><br><span class="line"><span class="string">    使用白名单策略,不带caller的请求则使用ip</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> _, rank_conf <span class="keyword">in</span> rate_limit_conf.items():</span><br><span class="line">            <span class="keyword">if</span> request.path <span class="keyword">in</span> rank_conf[<span class="string">'routes'</span>]:</span><br><span class="line">                <span class="keyword">for</span> capacity, expire, supply_rate <span class="keyword">in</span> rank_conf[<span class="string">'strategy'</span>]:</span><br><span class="line">                    rsp = _access(request, capacity, expire, supply_rate)</span><br><span class="line">                    <span class="keyword">if</span> rsp:</span><br><span class="line">                        <span class="keyword">return</span> rsp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">api_rate_limit</span><span class="params">(capacity=<span class="number">5</span>, expire=<span class="number">1</span>)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    中间件对所有接口做最基本的保证,缺乏灵活性。</span></span><br><span class="line"><span class="string">    提供修饰器的使用方法,可以使用在单独的接口上,更具灵活性</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param capacity: [int] expire时间内可调用次数</span></span><br><span class="line"><span class="string">    :param expire: [float] 单位是秒</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">api_rate_limit_wrapper</span><span class="params">(func)</span>:</span></span><br><span class="line"><span class="meta">        @functools.wraps(func)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">api_rate_limit_func</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">            request = args[<span class="number">0</span>]</span><br><span class="line">            rsp = _access(request, capacity, expire)</span><br><span class="line">            <span class="keyword">if</span> rsp:</span><br><span class="line">                <span class="keyword">return</span> rsp</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> api_rate_limit_func</span><br><span class="line">    <span class="keyword">return</span> api_rate_limit_wrapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_access</span><span class="params">(request, capacity, expire, supply_rate=None, redis_cli=redis_cli)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    api 限流</span></span><br><span class="line"><span class="string">    使用token bucket算法</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param request: [obj] 请求对象</span></span><br><span class="line"><span class="string">    :param capacity: [int] 在expire时间内能够发起的调用次数</span></span><br><span class="line"><span class="string">    :param supply_rate: [int] bucket补充速度</span></span><br><span class="line"><span class="string">    :param expire: [float] 时间长度</span></span><br><span class="line"><span class="string">    :param redis_cli: [obj] redis client</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    caller = _get_caller(request)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> caller:</span><br><span class="line">        <span class="keyword">return</span> MissingCallerRsp</span><br><span class="line"></span><br><span class="line">    expire_microsecond = MICROSECOND * expire</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> supply_rate:</span><br><span class="line">        supply_rate = expire_microsecond/capacity</span><br><span class="line"></span><br><span class="line">    bucket_key = CALLER_KEY_TPL.format(caller, request.path)</span><br><span class="line">    cur_timestamp = _get_timestamp()</span><br><span class="line">    bucket = redis_cli.hgetall(bucket_key)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> bucket:</span><br><span class="line">        tokens = capacity</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        last_timestamp, tokens = \</span><br><span class="line">            long(bucket[<span class="string">'last_timestamp'</span>]), int(bucket[<span class="string">'tokens'</span>])</span><br><span class="line">        <span class="comment"># 计算tokens</span></span><br><span class="line">        tokens = min(capacity, tokens+(cur_timestamp-last_timestamp)/supply_rate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> tokens &gt;= <span class="number">1</span>:</span><br><span class="line">        tokens -= <span class="number">1</span></span><br><span class="line">        _lua_hset(</span><br><span class="line">            [bucket_key],</span><br><span class="line">            [<span class="string">'last_timestamp'</span>, cur_timestamp,</span><br><span class="line">             <span class="string">'tokens'</span>, tokens],</span><br><span class="line">            max(expire, ONE_HOUR)</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> RequestTooFrequentRsp</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>分别使用单进程与多进程对api_rate_limit进行测试。由于中间件与独立函数基本上一致，我们只对独立函数进行测试。如下是我在服务器上起的api接口，同时也展示了如何使用api_rate_limit。接口很简单，只是在最开始的地方做了一个限流，限制请求以每秒钟5次的频率访问。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@api_rate_limit(capacity=5, expire=1)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">'success'</span>)</span><br></pre></td></tr></table></figure>
+<p>测试方法也比较简单，就是不停的向接口发请求，打印出访问成功的时间戳。多进程测试时，就是起几个进程，每个进程重复上面的步骤。只是在输出信息时做了一些区别，多进程还会输出每个进程的name。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> signal</span><br><span class="line"></span><br><span class="line">url = <span class="string">'xxx.xxx.xxx....'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">single_process_test</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        rsp = requests.get(url)</span><br><span class="line">        <span class="keyword">if</span> rsp.status_code == <span class="number">200</span>:</span><br><span class="line">            <span class="keyword">print</span> datetime.datetime.now()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multi_process_test</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_test</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">            rsp = requests.get(url)</span><br><span class="line">            <span class="keyword">if</span> rsp.status_code == <span class="number">200</span>:</span><br><span class="line">                msg = <span class="string">'&#123;0&#125; &#123;1&#125;'</span>.format(</span><br><span class="line">                    datetime.datetime.now(),</span><br><span class="line">                    multiprocessing.current_process().name,</span><br><span class="line">                )</span><br><span class="line">                <span class="keyword">print</span> msg</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kill_workers</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">for</span> process <span class="keyword">in</span> multiprocessing.active_children():</span><br><span class="line">            process.terminate()</span><br><span class="line">        <span class="keyword">import</span> sys</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line">    p_cnt = <span class="number">4</span></span><br><span class="line">    p = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(p_cnt):</span><br><span class="line">        _p = multiprocessing.Process(name=<span class="string">'process_&#123;0&#125;'</span>.format(i), target=_test)</span><br><span class="line">        _p.daemon = <span class="keyword">True</span></span><br><span class="line">        p.append(_p)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(p_cnt):</span><br><span class="line">        p[i].start()</span><br><span class="line"></span><br><span class="line">    signal.signal(signal.SIGHUP, kill_workers)</span><br><span class="line">    signal.signal(signal.SIGINT, kill_workers)</span><br><span class="line">    signal.signal(signal.SIGTERM, kill_workers)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(p_cnt):</span><br><span class="line">        p[i].join()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    single_process_test()</span><br><span class="line">    <span class="comment"># multi_process_test()</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><p>只有一个进程在访问接口时，程序输出如下信息。基本上每秒钟的成功访问次数是5，这个结果是符合预期的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">2017-12-31 18:06:33.708904</span><br><span class="line">2017-12-31 18:06:33.918038</span><br><span class="line">2017-12-31 18:06:34.132355</span><br><span class="line">2017-12-31 18:06:34.346779</span><br><span class="line">2017-12-31 18:06:34.552447</span><br><span class="line">2017-12-31 18:06:34.767989</span><br><span class="line">2017-12-31 18:06:34.979178</span><br><span class="line">2017-12-31 18:06:35.186383</span><br><span class="line">2017-12-31 18:06:35.395457</span><br><span class="line">2017-12-31 18:06:35.617200</span><br><span class="line">2017-12-31 18:06:35.831757</span><br><span class="line">2017-12-31 18:06:36.047009</span><br><span class="line">2017-12-31 18:06:36.254655</span><br><span class="line">2017-12-31 18:06:36.465700</span><br><span class="line">2017-12-31 18:06:36.667374</span><br><span class="line">2017-12-31 18:06:36.895062</span><br><span class="line">2017-12-31 18:06:37.103030</span><br><span class="line">2017-12-31 18:06:37.313911</span><br><span class="line">2017-12-31 18:06:37.530973</span><br><span class="line">2017-12-31 18:06:37.745396</span><br><span class="line">2017-12-31 18:06:37.959736</span><br><span class="line">2017-12-31 18:06:38.178208</span><br><span class="line">2017-12-31 18:06:38.391540</span><br><span class="line">2017-12-31 18:06:38.597252</span><br><span class="line">2017-12-31 18:06:38.799587</span><br><span class="line">2017-12-31 18:06:39.005146</span><br><span class="line">2017-12-31 18:06:39.211123</span><br><span class="line">2017-12-31 18:06:39.422840</span><br><span class="line">2017-12-31 18:06:39.639014</span><br><span class="line">2017-12-31 18:06:39.844864</span><br><span class="line">2017-12-31 18:06:40.105797</span><br><span class="line">2017-12-31 18:06:40.303648</span><br><span class="line">2017-12-31 18:06:40.503719</span><br><span class="line">2017-12-31 18:06:40.714770</span><br><span class="line">2017-12-31 18:06:40.932519</span><br><span class="line">2017-12-31 18:06:41.139138</span><br><span class="line">2017-12-31 18:06:41.352076</span><br><span class="line">2017-12-31 18:06:41.572667</span><br><span class="line">2017-12-31 18:06:41.771777</span><br></pre></td></tr></table></figure>
+<p>多进程情况下，输出结果有点怪异。每秒钟的请求成功次数在4~7次之间。大家可能已经意识到了，存在资源竞速的情况。我们不是使用了lua脚本来保证hset的原子性了吗？用lua实现hset，只是保证了hset的原子性。但是不能保证bucket资源的原子性。主要原因是我们没有在hget和hset之间加锁。举一个可能出现的例子，当请求A到达时，这时候还没有属于A的bucket，所以没有获取到bucket。这时候请求B也来了，也没有获取到bucket。此时相当于A和B都认为自己是第一次请求接口，他们都认为自己有N个token，然后都从里面拿走一个，还剩下N-1个token。接着A去hest桶资源，设置token为N-1，然后B也去hset桶资源，把A的设置给覆盖了，也设置token为N-1。最终两次访问之后桶中还有N-1个token，而实际上应该是N-2。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">2017-12-31 18:12:46.505145 process_2</span><br><span class="line">2017-12-31 18:12:46.714228 process_3</span><br><span class="line">2017-12-31 18:12:47.506608 process_2</span><br><span class="line">2017-12-31 18:12:47.521368 process_3</span><br><span class="line">2017-12-31 18:12:47.521637 process_0</span><br><span class="line">2017-12-31 18:12:47.522321 process_1</span><br><span class="line">2017-12-31 18:12:47.756011 process_3</span><br><span class="line">2017-12-31 18:12:47.756525 process_2</span><br><span class="line">2017-12-31 18:12:47.757567 process_1</span><br><span class="line">2017-12-31 18:12:47.960467 process_0</span><br><span class="line">2017-12-31 18:12:48.165730 process_3</span><br><span class="line">2017-12-31 18:12:48.391574 process_1</span><br><span class="line">2017-12-31 18:12:48.605674 process_2</span><br><span class="line">2017-12-31 18:12:48.820007 process_0</span><br><span class="line">2017-12-31 18:12:49.023727 process_3</span><br><span class="line">2017-12-31 18:12:49.227993 process_3</span><br><span class="line">2017-12-31 18:12:49.426867 process_1</span><br><span class="line">2017-12-31 18:12:49.640145 process_2</span><br><span class="line">2017-12-31 18:12:49.881380 process_0</span><br><span class="line">2017-12-31 18:12:50.056172 process_2</span><br><span class="line">2017-12-31 18:12:50.266562 process_2</span><br><span class="line">2017-12-31 18:12:50.480573 process_2</span><br><span class="line">2017-12-31 18:12:50.693158 process_1</span><br><span class="line">2017-12-31 18:12:50.693021 process_3</span><br><span class="line">2017-12-31 18:12:50.898402 process_2</span><br><span class="line">2017-12-31 18:12:51.103031 process_1</span><br><span class="line">2017-12-31 18:12:51.298433 process_0</span><br><span class="line">2017-12-31 18:12:51.513614 process_3</span><br><span class="line">2017-12-31 18:12:51.720962 process_0</span><br><span class="line">2017-12-31 18:12:51.944542 process_1</span><br><span class="line">2017-12-31 18:12:52.146480 process_2</span><br><span class="line">2017-12-31 18:12:52.355181 process_0</span><br><span class="line">2017-12-31 18:12:52.565183 process_1</span><br><span class="line">2017-12-31 18:12:52.767692 process_3</span><br><span class="line">2017-12-31 18:12:52.970029 process_2</span><br><span class="line">2017-12-31 18:12:53.170410 process_1</span><br><span class="line">2017-12-31 18:12:53.372768 process_2</span><br><span class="line">2017-12-31 18:12:53.586224 process_2</span><br><span class="line">2017-12-31 18:12:53.586956 process_1</span><br><span class="line">2017-12-31 18:12:53.791121 process_3</span><br><span class="line">2017-12-31 18:12:53.991593 process_3</span><br><span class="line">2017-12-31 18:12:54.192782 process_1</span><br></pre></td></tr></table></figure>
+<p>本文的实现并不考虑加锁主要出于以下几个考虑：</p>
+<ul>
+<li>复杂性。大部分企业的redis架构是分布式的。如果要加锁在我们的实现中需要实现一个redis proxy和一个分布式锁方案（当然也有开源的proxy）。一旦这么做之后，我们就需要考虑如何管理锁，如何确保数据一致性，如何容灾备份等一系列问题。</li>
+<li>加锁意味着开销，而这个开销会产生在所有使用api_rate_limit的接口上。</li>
+<li>当前的实现基本能满足需求。我们的目的是为了确保api调用保持在一个可控的量级，请求数在某个范围内波动都是可以允许的。</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>本文实现的api限流适用于单redis集群，集群架构需要视情况做一定的修改。</li>
+<li>如果想要严格控制请求数而加入锁机制，可以根据(caller, api)的方式来构造锁，原则就是越少进程争抢锁越好。</li>
+<li>在使用api_rate_limit时不要对一个接口加入太多的策略。比如有人可能想对接口A实现一秒2次，一分钟100次，一小时7000次的限流。一个请求只有在同时获取到3个token时，才能访问。其实没有必要搞这么复杂，直接用补充速度最慢的策略就行了。比如之前的例子，补充速度分别是0.5s/token，0.6s/token，0.51s/token，补充速度最慢的是一分钟100次。所以直接使用这个策略就行了。</li>
+<li>本实现只经过简单的测试。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://stripe.com/blog/rate-limiters" target="_blank" rel="noopener">Scaling your API with rate limiters</a></p>
+
+        </section>
+        <hr/>
+        <nav class="pagination" style="width:auto" role="pagination">
+            
+            <a data-pjax class="newer-posts" href="/2018/03/31/使用nginx分流进行A-B测试/">← Prev Post</a>
+            
+            <a class="share-button" data-original-title title>Share this Post</a>
+            
+            <a data-pjax class="older-posts" href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Next Post →</a>
+            
+        </nav>
+        <br/>
+        <br/>
+        <section id="comment">
+            <div id="comment-box"></div>
+        </section>
+
+
+    </article>
+</main>
+
+
+  
+<footer class="site-footer">
+    
+    <div class="inner">
+        <section class="copyright"><a href="/"></a> &copy; pan D.wei's Blog 2014</section>
+        <section class="poweredby">Published with <a target="_blank" href="http://hexo.io/">Hexo   </a> and Theme by <a target="_blank" href="https://github.com/yuche/hexo-theme-kael">Kael</a></section>
+    </div>
+</footer>
+</div>
+</div><!-- /scroller -->
+
+</div><!-- /pusher -->
+</div><!-- /container -->
+</div>
+
+<!-- Easter eggs -->
+
+<div class="egg animated">
+    <a id="close-button" href="#">X</a>
+    <div class="block">
+        <div class="loading">
+            <span class="ball1"></span>
+            <span class="ball2"></span>
+        </div>
+    </div>
+</div>
+  
+<script src="//cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        var script = document.createElement('script');
+        script.src = "/js/jquery.min.js";
+        document.body.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="/js/lib.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>

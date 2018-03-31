@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>Median of Two Sorted Arrays | pan D.wei&#39;s Blog</title>
+  <meta name="description" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/component.css" />
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <meta name="generator" content="pan D.wei's Blog">
+  <script src="http://static.duoshuo.com/embed.js"></script>
+  
+  
+  
+
+  
+
+</head>
+<body>
+<div class="container">
+    <div class="mp-pusher" id="mp-pusher">
+        <i id="scroll-up" class="fa fa-angle-up"></i>
+        <nav id="mp-menu" class="mp-menu">
+            <div class="mp-level">
+                <a data-pjax class="back-home" style="font-size: 20px" href="/"><h2 ><i class="fa fa-home"></i>
+                        Home</h2></a>
+                <ul class="first-level">
+                    <li>
+                        <a class="fa fa-archive" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Archive</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-archive"></i>
+                                Archive</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-archive" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                                </li>
+                                
+                                <li class="search-archive-li mp-pjax">
+                                    <a href="/2016/03/31/Linux-Command/">Linux Command</a>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-copy" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Categories</a>
+
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-copy"></i>
+                                Categories</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-category" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-tags" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Tags</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-tags"></i>
+                                Tags</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-tag" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>2</small>
+                                </li>
+                                
+                                <li class="search-tag-li mp-pjax">
+                                    <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li class="mp-pjax"><a class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a></li>
+                    <li><a class="fa fa-github" href="#">&nbsp;&nbsp;&nbsp;Github</a></li>
+
+                </ul>
+
+            </div>
+        </nav>
+        <div id="pjax">
+            <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/03/31/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                
+                    <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                
+                    <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
+                
+                
+                
+                    <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
+            </div>
+            <nav class="nexus">
+                <li  style="border-left: 1px solid #c6d0da;">
+                    <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                
+                <div id="nav-container">
+                    <div class="post-navbar" style="line-height: 63px;display:none">
+                        <li id="navbar-title"><a href="#">Median of Two Sorted Arrays</a></li>
+                        <li id="navbar-toc" style="border-left: none">
+                            <a style="padding-right: 15px">
+                                <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
+                            </a>
+                            <div class="hidden-box">
+                                <ul id="toc"></ul>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                
+            </nav>
+
+            <div class="scroller">
+            <div class="scroller-inner">
+
+
+<!-- -->
+<!--<body class="post-template">-->
+<!---->
+  
+
+<main class="content" role="main">
+    <article class="post" >
+    <span class="post-meta">
+                  <div class="tag-tile">
+                      
+                      
+                      <a data-pjax href='/tags/algorithm/' style='color:#D5D5D5'>algorithm</a>
+                      
+                      
+                  </div>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">Median of Two Sorted Arrays</h1>
+
+                    <div class="post-meta">
+                        Post on<span class="fa fa-clock-o"></span>
+                        <time datetime="2017-06-20T03:53:49.000Z"
+                              itemprop="datePublished">2017-06-20</time>
+                    </div>
+    </span>
+
+        <section class="post-content">
+            <h2 id="题目大意"><a href="#题目大意" class="headerlink" title="题目大意"></a>题目大意</h2><blockquote>
+<p>给两个长度分别为m和n的<code>有序</code>数组num1，nums2。用时间复杂度为<code>O(log (m+n))</code>的算法找到这两个数组<code>合并</code>之后的中位数。<a href="https://leetcode.com/problems/median-of-two-sorted-arrays/description/" target="_blank" rel="noopener">原题链接</a><br><a id="more"></a></p>
+</blockquote>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于num1和nums2是有序的，最简单的就是用类似归并排序归并两个有序数组的算法。定义p1，p2分别指向两个数组的头部，滑动所指数字更小的指针。当m+n为偶数时，取滑动过的第(m+n)/2, (m+n)/2-1的平均值；当m+n为奇数时，取滑动过的第(m+n)/2位值。把num1和nums2合并为一个数组的话，该算法相当于走了数组的一半(m+n)/2，所以时间复杂度为<code>O(m+n)</code>，不符合要求。</p>
+<p>nums1和nums2是有序的，要求复杂度是log量级的，而且又是找元素位置（中位数），我们可以试图往二分查找的方向靠。我们知道，<strong>在一个有序数组中，中位数的位置是固定的，它总是把数组分成两半，左边一半的数字总是比右边一半的小</strong>。现在考虑两个有序数组的情况，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nums1[<span class="number">0</span>],[<span class="number">1</span>],...,nums1[i<span class="number">-1</span>]|nums1[i],[i+<span class="number">1</span>]...,nums1[m]</span><br><span class="line">nums2[<span class="number">0</span>],[<span class="number">1</span>],...,nums2[j<span class="number">-1</span>]|nums2[j],nums2[j+<span class="number">1</span>]...,nums2[n]</span><br></pre></td></tr></table></figure>
+<p>其中i和j分别将nums1和nums2切割成两半。我们假设left_part=nums1[0,…,i-1]+nums2[0,…,j-1]，right_part=nums1[i,…,m]+nums[j,…,n]。<strong>当right_part的所有元素都比left_part的大，并且len(left_part)==len(right_part)时</strong>，我们就能找到这两个数组的中位数，用更简洁的方式来表达，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(1) len(left_part)=len(right_part) </span><br><span class="line">    -&gt; i + j = (m-i) + (n-j)</span><br><span class="line">    -&gt; i+j=(m+n)/2</span><br><span class="line">(2) nums1[i] &gt; nums2[j-1] &amp;&amp; nums2[j] &gt; nums1[i-1]</span><br></pre></td></tr></table></figure>
+<p>这样题目就转化为寻找满足上述条件的i和j的位置。通过(1)我们知道，当i已知时，j=(m+n)/2-i。当i往前滑动时，j会自动往后滑动，当i往后滑动时，j会自动往前。通过调节i和j的位置，直到找到满足条件(2)的i，j。为了保证j的值一直有效，i必须在长度更小的数组上滑动。否则，j可能会变成负数，导致错误。另外，由于i和j分别在两个数组上滑动，当i在长度更短的数组滑动时，我们能保证j的值一直有效，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">假设m &lt;= n， i在长度为m的数组上滑动，0 &lt; i &lt; m 。</span><br><span class="line">==&gt; j = (m+n+1)/2 - i &gt; (m+n+1)/2 - m &gt;= (2*m+1)/2 - m &gt;= 0    </span><br><span class="line">==&gt; j = (m+n+1)/2 - i &lt; (m+n+1)/2 &lt;= (2*n+1)/2 &lt;= n</span><br><span class="line">所以，0 &lt;= j &lt; n</span><br></pre></td></tr></table></figure></p>
+<p>上面的讨论都是针对nums1[i], nums1[i-1], nums2[j], nums2[j-1]都存在的情况。对于边界情况， 也就是i=0, i=m, j=0, j=n时，该如何处理呢？其实很简单，当哪一边的数不存在时，只要校验另外一边即可。比如，当i=0时，nums1[i-1]不存在，此时，我们只要校验nums1[i] &gt; nums2[j-1]即可。其实可以这么理解，i之所以会滑动到0的位置，是因为条件(2)不满足，也就是nums1[i]太大，nums2[j]太小。我们将i往后滑动，此时j相当于往前滑，也就是减小nums1[i]的值，增大nums2[j]的值。当nums1[i]一直太大，我们就一直让i往后滑动，当i滑动到0的位置没办法在往后了，此时如果nums1[0] &gt; nums2[j-1]，而nums2[j] &gt;= nums2[j-1]又是天然成立的，所以这种情况相当于nums1和nums2[j, …, n]构成了right_part，nums2[0, …, j-1]构成left_part。如果此时num1[0] &lt; nums2[j-1]会怎么样呢？说明此时j过大，应该减小j的值，同时i的值自动增大。</p>
+<p>因为j的位置是由i确定的，在搜索i的位置时，我们可以用二分查找，这样时间复杂度直接变为log量级。如下是用golang实现的算法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">max</span><span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> a &gt; b &#123;</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> b</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">min</span><span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> a &lt; b &#123;</span><br><span class="line">		<span class="keyword">return</span> a</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> b</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findMedianSortedArrays</span><span class="params">(nums1 []<span class="keyword">int</span>, nums2 []<span class="keyword">int</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">	shorter, longer := nums1, nums2</span><br><span class="line">    n, m := <span class="built_in">len</span>(nums1), <span class="built_in">len</span>(nums2)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(n &gt; m)&#123;</span><br><span class="line">		shorter, longer = nums2, nums1</span><br><span class="line">		n, m = m, n</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    i, j := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">	imin, imax := <span class="number">0</span>, n</span><br><span class="line">	half := <span class="keyword">int</span>((n+m+<span class="number">1</span>)/<span class="number">2</span>)</span><br><span class="line">	</span><br><span class="line">  	<span class="comment">// 查找i的位置</span></span><br><span class="line">	<span class="keyword">for</span> ;; &#123;</span><br><span class="line">		i = (imin+imax)/<span class="number">2</span></span><br><span class="line">		j = half - i</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>  i &lt; n &amp;&amp; shorter[i] &lt; longer[j<span class="number">-1</span>] &#123;</span><br><span class="line">			imin = i+<span class="number">1</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span>  i &gt; <span class="number">0</span> &amp;&amp; longer[j] &lt; shorter[i<span class="number">-1</span>]&#123;</span><br><span class="line">			imax = i<span class="number">-1</span></span><br><span class="line">		&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	is_odd := (n+m)%<span class="number">2</span></span><br><span class="line">	max_of_left, min_of_right := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> i==<span class="number">0</span> &#123;</span><br><span class="line">		max_of_left = longer[j<span class="number">-1</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> j==<span class="number">0</span> &#123;</span><br><span class="line">		max_of_left = shorter[i<span class="number">-1</span>]</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		max_of_left = max(longer[j<span class="number">-1</span>], shorter[i<span class="number">-1</span>])</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> is_odd != <span class="number">0</span>  &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">float64</span>(max_of_left)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> i==n &#123;</span><br><span class="line">		min_of_right = longer[j]</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> j==m &#123;</span><br><span class="line">		min_of_right = shorter[i]</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		min_of_right = min(longer[j], shorter[i])</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">float64</span>(min_of_right + max_of_left) / <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://discuss.leetcode.com/topic/4996/share-my-o-log-min-m-n-solution-with-explanation" target="_blank" rel="noopener">Share my O(log(min(m,n)) solution with explanation</a></p>
+
+        </section>
+        <hr/>
+        <nav class="pagination" style="width:auto" role="pagination">
+            
+            <a data-pjax class="newer-posts" href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">← Prev Post</a>
+            
+            <a class="share-button" data-original-title title>Share this Post</a>
+            
+            <a data-pjax class="older-posts" href="/2016/03/31/Linux-Command/">Next Post →</a>
+            
+        </nav>
+        <br/>
+        <br/>
+        <section id="comment">
+            <div id="comment-box"></div>
+        </section>
+
+
+    </article>
+</main>
+
+
+  
+<footer class="site-footer">
+    
+    <div class="inner">
+        <section class="copyright"><a href="/"></a> &copy; pan D.wei's Blog 2014</section>
+        <section class="poweredby">Published with <a target="_blank" href="http://hexo.io/">Hexo   </a> and Theme by <a target="_blank" href="https://github.com/yuche/hexo-theme-kael">Kael</a></section>
+    </div>
+</footer>
+</div>
+</div><!-- /scroller -->
+
+</div><!-- /pusher -->
+</div><!-- /container -->
+</div>
+
+<!-- Easter eggs -->
+
+<div class="egg animated">
+    <a id="close-button" href="#">X</a>
+    <div class="block">
+        <div class="loading">
+            <span class="ball1"></span>
+            <span class="ball2"></span>
+        </div>
+    </div>
+</div>
+  
+<script src="//cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        var script = document.createElement('script');
+        script.src = "/js/jquery.min.js";
+        document.body.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="/js/lib.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>
