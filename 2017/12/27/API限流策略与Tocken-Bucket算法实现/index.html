@@ -12,13 +12,16 @@
   <link rel="stylesheet" type="text/css" href="/css/component.css" />
   <link rel="stylesheet" type="text/css" href="/css/screen.css" />
   <meta name="generator" content="pan D.wei's Blog">
-  <script src="http://static.duoshuo.com/embed.js"></script>
+
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WlEt6BpzYCC3DYc6BA8Gm34p-gzGzoHsz", "j8XNnOegrpFwzRM8seXAekgf");</script>
+
   
   
   
 
   
-
+  
 </head>
 <body>
 <div class="container">
@@ -80,6 +83,11 @@
                             <ul>
                                 <div class="mp-scroll">
                                 
+                                <li class="search-category-li mp-pjax">
+                                    <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
+                                    <small>5</small>
+                                </li>
+                                
                                 </div>
                             </ul>
                         </div>
@@ -109,7 +117,7 @@
                                 
                                 <li class="search-tag-li mp-pjax">
                                     <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
-                                    <small>2</small>
+                                    <small>3</small>
                                 </li>
                                 
                                 </div>
@@ -137,6 +145,8 @@
                     <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
                 
                 
+                    <a data-pjax href="/categories/learning/">&nbsp;&nbsp;learning</a>
+                
                 
                     <a data-pjax href="/tags/OS/">&nbsp;&nbsp;OS</a>
                 
@@ -150,7 +160,7 @@
                 <li  style="border-left: 1px solid #c6d0da;">
                     <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
                 </li>
-                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                <li ><a id="nexus-back" href="/">pan D.wei&#39;s Blog</a></li>
                 
                 <div id="nav-container">
                     <div class="post-navbar" style="line-height: 63px;display:none">
@@ -171,17 +181,17 @@
             <div class="scroller">
             <div class="scroller-inner">
 
-
 <!-- -->
 <!--<body class="post-template">-->
 <!---->
   
-
 <main class="content" role="main">
     <article class="post" >
     <span class="post-meta">
                   <div class="tag-tile">
                       
+                      
+                      <a data-pjax href='/tags/linux/' style='color:#D5D5D5'>linux</a>
                       
                       <a data-pjax href='/tags/algorithm/' style='color:#D5D5D5'>algorithm</a>
                       
@@ -193,10 +203,13 @@
                         Post on<span class="fa fa-clock-o"></span>
                         <time datetime="2017-12-27T03:59:01.000Z"
                               itemprop="datePublished">2017-12-27</time>
-                    </div>
+                        
+                        <span class="post-meta-divider">|</span>     
+                        Views<span class="fa fa-eye"></span>
+                        <span class="leancloud-visitors-count"></span>
+                    </div>     
     </span>
-
-        <section class="post-content">
+        <section id="/2017/12/27/API限流策略与Tocken-Bucket算法实现/" class="post-content">
             <p>高可用和高可靠一直是web应用和api接口关注的目标。尤其对于api提供方，很可能面临着一个激增的流量影响服务的稳定性，导致机器的负载飙高的风险。如果流量持续上涨，并且不采取措施，可能会把机器打挂，并且是一台机器挂了之后，剩下的机器挂的更快。<br><a id="more"></a><br>笔者在工作中就遇到一个坑，上线之后导致api提供方的负载逐步增加，并且没有停下来的迹象。为避免把机器打挂，对方把这个接口拒绝服务了，简单粗暴。大家可能会好奇为什么不回滚呢？其实场景是这样的：因为笔者发现线上ES经常出现脏数据，这种情况往往是因为有人使用了线上ES配置进行开发或者测试，在不知情的情况下，往ES写了线下数据。当然，这种情况是因为开发测试流程不规范导致的，但是总是有人喜欢直接使用线上配置进行调试开发，以图方便。导致笔者经常需要跑脚本清理这些脏数据。考虑到在ES上加权限控制的成本与的确有场景需要使用线上ES的情况，笔者打算在代码逻辑上控制非线上机器的写ES权限。大概的逻辑就是在写ES时，判断当前机器的tag（用于判断机器的环境）与使用的ES配置。如果tag是线下机器并且ES配置是线上的，直接提示not allow。这样相当于<strong>在每次写ES时，都会做这个判断</strong>。问题出在获取机器tag的函数，笔者调用的是其他项目组维护的代码，并且不在同一个代码仓库，而这个函数封装了对api接口的调用（居然没有加缓存）。如果写ES的操作不是很频繁还好，但是因为我们在代码中对数据库操作做了一些hook来保证ES与数据库的数据一致，并且还有一些兜底策略来保证数据一致性。因此，ES写操作非常频繁，写操作QPS峰值能达到1k以上。而获取tag的服务明显是一个内部服务，一般的用途也只是在脚本启动时调用一次判断当前环境，显然抗压能力是很有限的。由于笔者没有对该函数进行跟踪，误以为函数的工作方式是获取机器的环境变量。因此直到对方拒绝服务，我方不断报警之后才发现。其他的细节就不过多叙述了，反思本次经历，对方将接口直接拒绝服务的做法没有问题，毕竟是一种保护措施。其实可以有一种更温和的方式，就是对api进行限流。</p>
 <p>api限流在以下几种方式可以提高接口的可靠性：</p>
 <ul>
@@ -327,6 +340,7 @@
         document.body.appendChild(script);
     }
 </script>
+<script type="text/javascript" src="/js/lean-analystics.js"></script>
 <script type="text/javascript" src="/js/lib.js"></script>
 <script type="text/javascript" src="/js/main.js"></script>
 
