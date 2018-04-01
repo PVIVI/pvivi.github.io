@@ -8,7 +8,6 @@ function showTime(Counter) {
   });
 
   query.containedIn('url', entries);
-  console.log(entries)
   query.find()
     .done(function (results) {
       var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
@@ -46,7 +45,6 @@ function addCount (Counter) {
 
   //use url as unique idnetfication
   query.equalTo("url",url);
-  console.log(url)
   
   query.find({
       success: function(results){
