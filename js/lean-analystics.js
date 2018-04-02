@@ -77,29 +77,3 @@ function addCount (Counter) {
       }
   });
 }
-$(function(){
-  var Counter=AV.Object.extend("Counter");
-
-  //only increse visit counting when intering a page
-  if ($('.post-content').length == 1){
-    addCount(Counter);
-
-    $('.leancloud-visitors-count').text(1);
-    var url=$(".post-content").attr('id').trim();
-    var query=new AV.Query(Counter);
-    query.equalTo("url", url);
-
-    query.find({
-        success: function(results){
-          $('.leancloud-visitors-count').text(results[0].get("time")+1);
-        },
-        error: function(error){
-            alert("Error:"+error.code+" "+error.message);
-        }
-    })
-  }
-  else{
-    showTime(Counter)
-    return
-  }
-});

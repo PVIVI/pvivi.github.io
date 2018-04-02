@@ -1,16 +1,16 @@
 var hasPushstate = !!(window.history && history.pushState);
 // duoshuo load function
-// var duoshuoName = 'yuche'; // change to your DUOSHUO name
-// var duoshuoQuery = {short_name: duoshuoName}; // change to your duoshuo name
-// function toggleDuoshuoComments(container) {
-//     var el = document.createElement('div');
-//     el.setAttribute('data-thread-key', postTitle);
-//     el.setAttribute('data-url', postHref);
-//     el.setAttribute('data-title', postTitle);
-//     el.setAttribute('data-author-key', duoshuoName); // change to your duoshuo name
-//     DUOSHUO.EmbedThread(el);
-//     jQuery(container).append(el);
-// }
+var duoshuoName = 'yuche'; // change to your DUOSHUO name
+var duoshuoQuery = {short_name: duoshuoName}; // change to your duoshuo name
+function toggleDuoshuoComments(container) {
+    var el = document.createElement('div');
+    el.setAttribute('data-thread-key', postTitle);
+    el.setAttribute('data-url', postHref);
+    el.setAttribute('data-title', postTitle);
+    el.setAttribute('data-author-key', duoshuoName); // change to your duoshuo name
+    DUOSHUO.EmbedThread(el);
+    jQuery(container).append(el);
+}
 
 var smallScreen = window.screen.width < 500;
 
@@ -368,6 +368,34 @@ function afterPjax() {
         $('.post-navbar').hide(300);
         $('.nexus').css('width', 'auto');
     }
+
+    // show views
+    $(function(){
+        var Counter=AV.Object.extend("Counter");
+      
+        //only increse visit counting when intering a page
+        if ($('.post-content').length == 1){
+          addCount(Counter);
+      
+          $('.leancloud-visitors-count').text(1);
+          var url=$(".post-content").attr('id').trim();
+          var query=new AV.Query(Counter);
+          query.equalTo("url", url);
+      
+          query.find({
+              success: function(results){
+                $('.leancloud-visitors-count').text(results[0].get("time")+1);
+              },
+              error: function(error){
+                  alert("Error:"+error.code+" "+error.message);
+              }
+          })
+        }
+        else{
+          showTime(Counter)
+          return
+        }
+      });
 
 };
 //      PJAX init
