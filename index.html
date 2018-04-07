@@ -46,6 +46,10 @@
                                 <div class="mp-scroll">
                                 
                                 <li class="search-archive-li">
+                                    <a href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
                                     <a href="/2018/03/16/虚拟内存/">虚拟内存</a>
                                 </li>
                                 
@@ -112,12 +116,17 @@
                                 
                                 <li class="search-tag-li">
                                     <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>3</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/cache/">&nbsp;&nbsp;&nbsp;cache</a>
                                     <small>2</small>
                                 </li>
                                 
                                 <li class="search-tag-li">
                                     <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
-                                    <small>3</small>
+                                    <small>4</small>
                                 </li>
                                 
                                 </div>
@@ -133,6 +142,8 @@
         </nav>
         <div id="pjax">
             <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
                 
                     <a  data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
                 
@@ -151,6 +162,8 @@
                     <a data-pjax href="/tags/OS/">&nbsp;&nbsp;OS</a>
                 
                     <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/cache/">&nbsp;&nbsp;cache</a>
                 
                     <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
                 
@@ -194,6 +207,45 @@
             <div class="tag-tile">
                 
                 
+                <a data-pjax href='/tags/algorithm/'>algorithm</a>
+                
+                <a data-pjax href='/tags/linux/'>linux</a>
+                
+                <a data-pjax href='/tags/cache/'>cache</a>
+                
+                
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title" id="/2018/04/07/用redis构建分布式锁/"><a data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2018-04-07T04:37:58.000Z"
+                      itemprop="datePublished">2018-04-07</time>
+                <span class="post-meta-divider">|</span>
+                Views<span class="fa fa-eye"></span>
+                <x class="leancloud-visitors-count" id="/2018/04/07/用redis构建分布式锁/"></x>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p>为什么要使用redis来实现一个分布式锁？一个比较主要的原因是和分布式系统的<code>范围</code>有关[1]。多线程中也有锁，可以使多个线程进行排他性访问，避免资源竞争，最终达到数据一致，但是这个锁仅在线程间可见。而在分布式系统架构中，各个节点通过网络连接，要确保各节点间的排他性访问不论是操作系统级别的锁还是编程语言级别的锁都将失效。
+                
+            </p>
+            
+        </section>
+    </article>
+    
+    <article class="post">
+
+        <header class="post-header">
+            <div class="tag-tile">
+                
+                
+                <a data-pjax href='/tags/cache/'>cache</a>
+                
                 <a data-pjax href='/tags/OS/'>OS</a>
                 
                 
@@ -227,9 +279,9 @@
             <div class="tag-tile">
                 
                 
-                <a data-pjax href='/tags/linux/'>linux</a>
-                
                 <a data-pjax href='/tags/algorithm/'>algorithm</a>
+                
+                <a data-pjax href='/tags/linux/'>linux</a>
                 
                 
                 <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>

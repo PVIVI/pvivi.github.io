@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>用redis构建分布式锁 | pan D.wei&#39;s Blog</title>
+  <meta name="description" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/component.css" />
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <meta name="generator" content="pan D.wei's Blog">
+  <script src="http://static.duoshuo.com/embed.js"></script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WlEt6BpzYCC3DYc6BA8Gm34p-gzGzoHsz", "j8XNnOegrpFwzRM8seXAekgf");</script>
+
+  
+  
+  
+
+  
+  
+</head>
+<body>
+<div class="container">
+    <div class="mp-pusher" id="mp-pusher">
+        <i id="scroll-up" class="fa fa-angle-up"></i>
+        <nav id="mp-menu" class="mp-menu">
+            <div class="mp-level">
+                <a data-pjax class="back-home" style="font-size: 20px" href="/"><h2 ><i class="fa fa-home"></i>
+                        Home</h2></a>
+                <ul class="first-level">
+                    <li>
+                        <a class="fa fa-archive" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Archive</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-archive"></i>
+                                Archive</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-archive" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2016/03/31/Linux-Command/">Linux Command</a>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-copy" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Categories</a>
+
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-copy"></i>
+                                Categories</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-category" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-category-li">
+                                    <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
+                                    <small>5</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-tags" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Tags</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-tags"></i>
+                                Tags</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-tag" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/OS/">&nbsp;&nbsp;&nbsp;OS</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>3</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/cache/">&nbsp;&nbsp;&nbsp;cache</a>
+                                    <small>2</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
+                                    <small>4</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li><a class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a></li>
+
+                </ul>
+
+            </div>
+        </nav>
+        <div id="pjax">
+            <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+                
+                    <a  data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                
+                    <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                
+                    <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                
+                    <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
+                
+                
+                    <a data-pjax href="/categories/learning/">&nbsp;&nbsp;learning</a>
+                
+                
+                    <a data-pjax href="/tags/OS/">&nbsp;&nbsp;OS</a>
+                
+                    <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/cache/">&nbsp;&nbsp;cache</a>
+                
+                    <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
+            </div>
+            <nav class="nexus">
+                <li  style="border-left: 1px solid #c6d0da;">
+                    <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                
+                <div id="nav-container">
+                    <div class="post-navbar" style="line-height: 63px;display:none">
+                        <li id="navbar-title"><a href="#">用redis构建分布式锁</a></li>
+                        <li id="navbar-toc" style="border-left: none">
+                            <a style="padding-right: 15px">
+                                <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
+                            </a>
+                            <div class="hidden-box">
+                                <ul id="toc"></ul>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                
+            </nav>
+
+            <div class="scroller">
+            <div class="scroller-inner">
+
+<!-- -->
+<!--<body class="post-template">-->
+<!---->
+  
+<main class="content" role="main">
+    <article class="post" >
+    <span class="post-meta">
+                  <div class="tag-tile">
+                      
+                      
+                      <a data-pjax href='/tags/algorithm/' style='color:#D5D5D5'>algorithm</a>
+                      
+                      <a data-pjax href='/tags/linux/' style='color:#D5D5D5'>linux</a>
+                      
+                      <a data-pjax href='/tags/cache/' style='color:#D5D5D5'>cache</a>
+                      
+                      
+                  </div>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">用redis构建分布式锁</h1>
+
+                    <div class="post-meta">
+                        Post on<span class="fa fa-clock-o"></span>
+                        <time datetime="2018-04-07T04:37:58.000Z"
+                              itemprop="datePublished">2018-04-07</time>
+                        
+                        <span class="post-meta-divider">|</span>     
+                        Views<span class="fa fa-eye"></span>
+                        <x class="leancloud-visitors-count"></x>
+                    </div>     
+    </span>
+        <section id="/2018/04/07/用redis构建分布式锁/" class="post-content">
+            <p>为什么要使用redis来实现一个分布式锁？一个比较主要的原因是和分布式系统的<code>范围</code>有关[1]。多线程中也有锁，可以使多个线程进行排他性访问，避免资源竞争，最终达到数据一致，但是这个锁仅在线程间可见。而在分布式系统架构中，各个节点通过网络连接，要确保各节点间的排他性访问不论是操作系统级别的锁还是编程语言级别的锁都将失效。<a id="more"></a>我们需要的是一个全局可见的锁，即分布式系统中各个节点都可以访问到这个锁。 由于redis经常充当分布式系统中缓存的角色，因此在分布式系统中它必然是全局可见的，另外由于它是一个key-value型的内存数据库除了速度快外，也比较易于实现。当然，易于实现只是想对来说的，一个可靠的分布式锁需要考虑到分布式系统可能存在的各种情形，以下是使用redis实现的分布式锁需要达到的几个目标[2]：</p>
+<ul>
+<li><code>安全属性</code>: 不管任何时候，只有一个客户端能持有锁，一个客户端获取到的锁不能被另一个客户端释放</li>
+<li><code>效率属性A</code>: 不会死锁，就算一个持有锁的客户端宕掉或者发生网络分区</li>
+<li><code>效率属性B</code>: 容错，只要大部分节点工作正常，客户端就能获取和释放锁</li>
+</ul>
+<p>安全属性这个不用说，本来锁的作用就是为了让各个节点进行排他性访问的，这个在锁的设计上是应该考虑的。对于效率属性A，在分布式系统中的场景是这样的，当一个获取到锁的节点宕机之后，锁没有得到释放，造成其他节点都在等待锁。我们知道造成死锁有4个必要条件，只要破坏其中任意一点，就能打破死锁。我们的做法是给每个锁设定一个超时时间，超时时间一到锁就自动释放，这样也就打破了<code>请求和保持</code>条件，也就不会造成死锁了。当然，给锁设置超时时间会产生另外的问题，如下：</p>
+<ul>
+<li>持有锁的节点因为操作时间过长而导致锁被自动释放，但该节点本身不知道这点，甚至有可能在执行完释放锁的时候把其他节点获取到的锁释放了</li>
+<li>由于网络问题，节点A获取锁的时间比较长，当返回获取成功的同时，锁被自动释放了，而节点B在此时也在获取同一个锁，由于锁已经被自动释放了，所以节点B也获取成功了。最终节点A和节点B都认为自己获取到锁了。</li>
+</ul>
+<p>针对第一个问题，我们会为每个获取锁的节点生成一个随机数，这样即使是同一个锁，不同的节点获取到之后也有不同的随机数，以此来保证一个节点不会释放另一个节点获取到的锁。另外，为了避免操作时间过长导致锁被自动释放，我们可以提供一个方法来刷新锁的持有时间。</p>
+<p>针对第二个问题，我们可以将超时时间设置的比获取时间长很多，并且在获取到锁时判断我们拿到锁的时间是否已经大于了超时时间，一旦大于超时时间则认为获取锁失败。</p>
+<p>以上两个问题的解决方法会在之后介绍Redlock算法时再提及。最后，效率属性B也会放到Redlock小节去介绍。实际上，对于redis是单实例的分布式系统来说，不用考虑效率属性B。但是，redis实际上也是分布式的，这也是业界普遍使用的，单实例的情况还是比较少见的。下面我们针对redis是单实例和分布式部署的情况来介绍分布式锁的实现。</p>
+<h2 id="单实例redis实现分布式锁"><a href="#单实例redis实现分布式锁" class="headerlink" title="单实例redis实现分布式锁"></a>单实例redis实现分布式锁</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">acquire_locak_with_timeout</span><span class="params">(conn,</span></span></span><br><span class="line"><span class="function"><span class="params">                               lockname,</span></span></span><br><span class="line"><span class="function"><span class="params">                               acquire_timeout=<span class="number">10</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                               lock_timeout=<span class="number">10</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 生成随机标识</span></span><br><span class="line">    identifier = str(uuid.uuid4())</span><br><span class="line">    lockname = <span class="string">'local'</span> + lockname</span><br><span class="line">    lock_timeout = int(math.ceil(lock_timeout))</span><br><span class="line">    </span><br><span class="line">    end = time.time() + acquire_timeout</span><br><span class="line">    <span class="keyword">while</span> time.time() &lt; end:</span><br><span class="line">        <span class="comment"># 成功获取了锁之后才设置锁的超时时间</span></span><br><span class="line">        <span class="keyword">if</span> conn.setnx(lockname, lock_timeout)</span><br><span class="line">        	conn.expire(lockname, lock_timeout)</span><br><span class="line">            <span class="comment"># 返回随机生成的值，在释放锁时使用</span></span><br><span class="line">            <span class="keyword">return</span> identifier</span><br><span class="line">        <span class="keyword">elif</span> <span class="keyword">not</span> conn.ttl(lockname):</span><br><span class="line">            conn.expire(lockname, lock_timeout)</span><br><span class="line">        </span><br><span class="line">        time.sleep(<span class="number">.001</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">release_lock</span><span class="params">(conn, lockname, identifier)</span>:</span></span><br><span class="line">    pipe = conn.pipeline(<span class="keyword">True</span>)</span><br><span class="line">    lockname = <span class="string">'lock:'</span> + lockname</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            pipe.watch(lockname)</span><br><span class="line">            <span class="comment"># 检查进程是否仍然持有锁</span></span><br><span class="line">            <span class="keyword">if</span> pipe.get(lockname) == identifier:</span><br><span class="line">                pipe.multi()</span><br><span class="line">                pipe.delete(lockname)</span><br><span class="line">                pipe.execute()</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">           	pipe.unwatch()</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">except</span> redis.exceptions.WatchError:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>以上代码是《redis实战》中的实现。在实现中，代码为每一个获取锁的客户端都生成了一个128位的标识identifier，即使是同一个锁，不同的客户端也会生成不同的identifier。而在释放锁时，会首先检查锁的identifier是否与客户端持有的identifier一致。如果一致，表示客户端依然持有锁，可以释放；如果不一致，表示客户端持有的锁已经被释放了。通过identifier可以确保客户端A不会释放其他客户端获取的锁。为了避免客户端在获取到锁还没来得及设置锁的过期时间就出现宕机或者断电的情况，在acquire_locak_with_timeout中会对没有设置过期时间的锁加上过期时间，确保所有的锁都会被自动释放。上述的分布式锁适合在只有一个redis实例的情况下使用，对于多redis实例的集群架构，需要有另外的分布式锁实现。</p>
+<h2 id="多实例redis实现分布式锁（Redlock）"><a href="#多实例redis实现分布式锁（Redlock）" class="headerlink" title="多实例redis实现分布式锁（Redlock）"></a>多实例redis实现分布式锁（Redlock）</h2><p>根据redis官方文档描述的分布式锁管理器实现算法Redlock，我们来描述一下获取锁的过程，假设在我们的redis集群中存在N个节点：</p>
+<ol>
+<li>获取当前时间（单位是毫秒）。</li>
+<li>轮流用相同的key和随机值在N个节点上请求锁，在这一步里，客户端在每个master上请求锁时，会有一个和总的锁释放时间相比小的多的超时时间。比如如果锁自动释放时间是10秒钟，那每个节点锁请求的超时时间可能是5-50毫秒的范围，这个可以防止一个客户端在某个宕掉的master节点上阻塞过长时间，如果一个master节点不可用了，我们应该尽快尝试下一个master节点。</li>
+<li>客户端计算第二步中获取锁所花的时间，<strong>只有当客户端在大多数master节点（N/2+1个节点）上成功获取了锁，而且总共消耗的时间不超过锁释放时间，这个锁就认为是获取成功了</strong>。</li>
+<li>如果锁获取成功了，那现在锁自动释放时间就是最初的锁释放时间减去之前获取锁所消耗的时间。</li>
+<li>如果锁获取失败了，不管是因为获取成功的锁不超过一半（N/2+1)还是因为总消耗时间超过了锁释放时间，客户端都会到每个master节点上释放锁，即便是那些它认为没有获取成功的锁。</li>
+</ol>
+<p>简单的来说，在多实例redis集群架构中实现分布式锁需要在集群中的每个master节点都去获取锁，只要在N/2+1个节点上成功获取，并且花费的时间符合要求即可。为什么不是获取N个锁呢？<strong>因为同一个锁，只要客户端A获取了集群中超过半数的锁，在A还没释放和锁没超时的情况下，其他客户端不可能在获取超过半数的锁。</strong>也就是说，RedLock算法只要在集群中超过半数的节点正常工作的情况下，都能保证客户端获取到锁。正如我们之前说过的，获取锁的时间如果超过了锁超时的时间，这个锁其实是无效的。在多实例redis架构中也是如此，如果我们设置锁的过期时间是1s，但是我们获取（N/2+1）个锁的时间超过了1s，那么我们获取到的这（N/2+1)个锁应该认为是无效的。根据官方文档描述，我们假设锁的超时时间是TTL，获取第一个锁的时间是T1，获取最后一个锁的时间是T2，那么当我们获取到分布式锁时（也就是我们获取到集群中（N/2+1)个锁时），该锁的存活时间可以认为是MIN_VALIDITY=TTL-(T2-T1)-CLOCK_DRIFT。CLOCK_DRIFT是不同进程间的时钟差异，比如redis超时的时间精度等等。</p>
+<p>最后我们来看看<a href="https://github.com/SPSCommerce/redlock-py" target="_blank" rel="noopener">Redlock的python版实现源码</a>，相关注释也写在代码里了，如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="keyword">from</span> redis.exceptions <span class="keyword">import</span> RedisError</span><br><span class="line"></span><br><span class="line"><span class="comment"># Python 3 compatibility</span></span><br><span class="line">string_type = getattr(__builtins__, <span class="string">'basestring'</span>, str)</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    basestring</span><br><span class="line"><span class="keyword">except</span> NameError:</span><br><span class="line">    basestring = str</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Lock = namedtuple(<span class="string">"Lock"</span>, (<span class="string">"validity"</span>, <span class="string">"resource"</span>, <span class="string">"key"</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CannotObtainLock</span><span class="params">(Exception)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MultipleRedlockException</span><span class="params">(Exception)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, errors, *args, **kwargs)</span>:</span></span><br><span class="line">        super(MultipleRedlockException, self).__init__(*args, **kwargs)</span><br><span class="line">        self.errors = errors</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">' :: '</span>.join([str(e) <span class="keyword">for</span> e <span class="keyword">in</span> self.errors])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__repr__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.__str__()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Redlock</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    default_retry_count = <span class="number">3</span></span><br><span class="line">    default_retry_delay = <span class="number">0.2</span></span><br><span class="line">    clock_drift_factor = <span class="number">0.01</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 用lua实现释放单实例redis锁</span></span><br><span class="line">    unlock_script = <span class="string">"""</span></span><br><span class="line"><span class="string">    if redis.call("get",KEYS[1]) == ARGV[1] then</span></span><br><span class="line"><span class="string">        return redis.call("del",KEYS[1])</span></span><br><span class="line"><span class="string">    else</span></span><br><span class="line"><span class="string">        return 0</span></span><br><span class="line"><span class="string">    end"""</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, connection_list, retry_count=None, retry_delay=None)</span>:</span></span><br><span class="line">        self.servers = []</span><br><span class="line">        <span class="keyword">for</span> connection_info <span class="keyword">in</span> connection_list:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">if</span> isinstance(connection_info, string_type):</span><br><span class="line">                    server = redis.StrictRedis.from_url(connection_info)</span><br><span class="line">                <span class="keyword">elif</span> type(connection_info) == dict:</span><br><span class="line">                    server = redis.StrictRedis(**connection_info)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    server = connection_info</span><br><span class="line">                self.servers.append(server)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="keyword">raise</span> Warning(str(e))</span><br><span class="line">        self.quorum = (len(connection_list) // <span class="number">2</span>) + <span class="number">1</span></span><br><span class="line">        <span class="comment"># 如果集群中没有超过半数的有效节点，则认为异常</span></span><br><span class="line">        <span class="keyword">if</span> len(self.servers) &lt; self.quorum:</span><br><span class="line">            <span class="keyword">raise</span> CannotObtainLock(</span><br><span class="line">                <span class="string">"Failed to connect to the majority of redis servers"</span>)</span><br><span class="line">        self.retry_count = retry_count <span class="keyword">or</span> self.default_retry_count</span><br><span class="line">        self.retry_delay = retry_delay <span class="keyword">or</span> self.default_retry_delay</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lock_instance</span><span class="params">(self, server, resource, val, ttl)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        获取单实例redis锁，为锁设置一个随机值val。每次获取这个锁都会重新生成val。</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">assert</span> isinstance(ttl, int), <span class="string">'ttl &#123;&#125; is not an integer'</span>.format(ttl)</span><br><span class="line">        <span class="keyword">except</span> AssertionError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(str(e))</span><br><span class="line">        <span class="keyword">return</span> server.set(resource, val, nx=<span class="keyword">True</span>, px=ttl)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">unlock_instance</span><span class="params">(self, server, resource, val)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        释放单实例redis锁，释放时会校验val值，避免释放成其他客户端获取的锁</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            server.eval(self.unlock_script, <span class="number">1</span>, resource, val)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            logging.exception(<span class="string">"Error unlocking resource %s in server %s"</span>, resource, str(server))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_unique_id</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        随机生成长度为22的值。获取和释放锁都用这个值，确保不会重复获取和释放</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        CHARACTERS = string.ascii_letters + string.digits</span><br><span class="line">        <span class="keyword">return</span> <span class="string">''</span>.join(random.choice(CHARACTERS) <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">22</span>)).encode()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lock</span><span class="params">(self, resource, ttl)</span>:</span></span><br><span class="line">        retry = <span class="number">0</span></span><br><span class="line">        val = self.get_unique_id()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Add 2 milliseconds to the drift to account for Redis expires</span></span><br><span class="line">        <span class="comment"># precision, which is 1 millisecond, plus 1 millisecond min</span></span><br><span class="line">        <span class="comment"># drift for small TTLs.</span></span><br><span class="line">        drift = int(ttl * self.clock_drift_factor) + <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        redis_errors = list()</span><br><span class="line">        <span class="keyword">while</span> retry &lt; self.retry_count:</span><br><span class="line">            n = <span class="number">0</span></span><br><span class="line">            start_time = int(time.time() * <span class="number">1000</span>)</span><br><span class="line">            <span class="keyword">del</span> redis_errors[:]</span><br><span class="line">            <span class="comment"># 去获取每个节点的redis锁，并对获取成功的锁计数加1</span></span><br><span class="line">            <span class="keyword">for</span> server <span class="keyword">in</span> self.servers:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    <span class="keyword">if</span> self.lock_instance(server, resource, val, ttl):</span><br><span class="line">                        n += <span class="number">1</span></span><br><span class="line">                <span class="keyword">except</span> RedisError <span class="keyword">as</span> e:</span><br><span class="line">                    redis_errors.append(e)</span><br><span class="line">            elapsed_time = int(time.time() * <span class="number">1000</span>) - start_time</span><br><span class="line">            validity = int(ttl - elapsed_time - drift)</span><br><span class="line">            <span class="comment"># 成功获取到锁需要满足两个条件：</span></span><br><span class="line">            <span class="comment"># 1.锁的过期时间大于所有锁的获取时间和补偿时间之和</span></span><br><span class="line">            <span class="comment"># 2.获取到超过半数节点的redis锁</span></span><br><span class="line">            <span class="keyword">if</span> validity &gt; <span class="number">0</span> <span class="keyword">and</span> n &gt;= self.quorum:</span><br><span class="line">                <span class="keyword">if</span> redis_errors:</span><br><span class="line">                    <span class="keyword">raise</span> MultipleRedlockException(redis_errors)</span><br><span class="line">                <span class="keyword">return</span> Lock(validity, resource, val)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> server <span class="keyword">in</span> self.servers:</span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        self.unlock_instance(server, resource, val)</span><br><span class="line">                    <span class="keyword">except</span>:</span><br><span class="line">                        <span class="keyword">pass</span></span><br><span class="line">                retry += <span class="number">1</span></span><br><span class="line">                time.sleep(self.retry_delay)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">unlock</span><span class="params">(self, lock)</span>:</span></span><br><span class="line">        redis_errors = []</span><br><span class="line">        <span class="comment"># 释放每个节点的锁</span></span><br><span class="line">        <span class="keyword">for</span> server <span class="keyword">in</span> self.servers:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                self.unlock_instance(server, lock.resource, lock.key)</span><br><span class="line">            <span class="keyword">except</span> RedisError <span class="keyword">as</span> e:</span><br><span class="line">                redis_errors.append(e)</span><br><span class="line">        <span class="keyword">if</span> redis_errors:</span><br><span class="line">            <span class="keyword">raise</span> MultipleRedlockException(redis_errors)</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>[1] redis实战</p>
+<p><a href="http://ifeve.com/redis-lock/" target="_blank" rel="noopener">[2] redis官方文档-中文</a></p>
+
+        </section>
+        <hr/>
+        <nav class="pagination" style="width:auto" role="pagination">
+            
+            <a style="cursor:default" class="newer-posts" href="#">This is the First Post</a>
+            
+            <a class="share-button" data-original-title title>Share this Post</a>
+            
+            <a data-pjax class="older-posts" href="/2018/03/16/虚拟内存/">Next Post →</a>
+            
+        </nav>
+        <br/>
+        <br/>
+        <section id="comment">
+            <div id="comment-box"></div>
+        </section>
+
+
+    </article>
+</main>
+
+
+  
+<footer class="site-footer">
+    
+    <div class="inner">
+        <section class="copyright"><a href="/"></a> &copy; pan D.wei's Blog 2016</section>
+    </div>
+</footer>
+</div>
+</div><!-- /scroller -->
+
+</div><!-- /pusher -->
+</div><!-- /container -->
+</div>
+
+<!-- Easter eggs -->
+
+<div class="egg animated">
+    <a id="close-button" href="#">X</a>
+    <div class="block">
+        <div class="loading">
+            <span class="ball1"></span>
+            <span class="ball2"></span>
+        </div>
+    </div>
+</div>
+
+  
+<script src="//cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        var script = document.createElement('script');
+        script.src = "/js/jquery.min.js";
+        document.body.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="/js/lean-analystics.js"></script>
+<script type="text/javascript" src="/js/lib.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>

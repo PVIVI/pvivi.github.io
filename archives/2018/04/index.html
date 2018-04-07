@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>Archives: 2018 | pan D.wei&#39;s Blog</title>
+  <title>Archives: 2018/4 | pan D.wei&#39;s Blog</title>
   <meta name="description" content="" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="MobileOptimized" content="320" />
@@ -232,41 +232,6 @@
             <p>
                 
                 <p>为什么要使用redis来实现一个分布式锁？一个比较主要的原因是和分布式系统的<code>范围</code>有关[1]。多线程中也有锁，可以使多个线程进行排他性访问，避免资源竞争，最终达到数据一致，但是这个锁仅在线程间可见。而在分布式系统架构中，各个节点通过网络连接，要确保各节点间的排他性访问不论是操作系统级别的锁还是编程语言级别的锁都将失效。
-                
-            </p>
-            
-        </section>
-    </article>
-    
-    <article class="post">
-
-        <header class="post-header">
-            <div class="tag-tile">
-                
-                
-                <a data-pjax href='/tags/cache/'>cache</a>
-                
-                <a data-pjax href='/tags/OS/'>OS</a>
-                
-                
-                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
-            </div>
-            <h1 class="post-title" id="/2018/03/16/虚拟内存/"><a data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
-            </h1>
-
-            <div class="post-meta">
-                Post on<span class="fa fa-clock-o"></span>
-                <time datetime="2018-03-16T04:17:20.000Z"
-                      itemprop="datePublished">2018-03-16</time>
-                <span class="post-meta-divider">|</span>
-                Views<span class="fa fa-eye"></span>
-                <x class="leancloud-visitors-count" id="/2018/03/16/虚拟内存/"></x>
-            </div>
-        </header>
-        <section class="post-excerpt">
-            <p>
-                
-                <p>不知道大家是否有思考过为什么我们的计算机除了运行操作系统外，还可以同时运行多个程序？大部分人一般是从cpu的角度来考虑的，如果是单核计算机，通过<code>并发</code>技术，快速的在不同的进程间切换，让用户感觉多个进程在好像在同时运行；如果是多核计算机，除了可以并发外，每个核之间还能<code>并行</code>处理，真正的达到了同时处理多个程序的目的。我们都说计算机运行中的程序都存在内存中，但是在当今随便一个程序就上百M，甚至有的游戏已经达到好几G的情况下，操作系统是如何实现同时运行多个程序的呢？这里就涉及到虚拟内存技术，简单的说虚拟内存就是计算机利用硬件和软件资源，将暂时不需要的数据存在硬盘空间中，需要时再交换进内存空间。由于我们的硬盘空间相比于主存大了很大，弥补了主存空间不足的缺陷，达到同时运行多个程序的目的。<br>
                 
             </p>
             
