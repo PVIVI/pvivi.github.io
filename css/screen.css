@@ -388,6 +388,14 @@ margin on the iframe, cause it breaks stuff. */
     hyphens: auto;
 }
 
+.post pre {
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
 /* Add a little circle in the middle of the border-bottom on our .post
    just for the lolz and stylepoints. */
 .post:after {
@@ -811,6 +819,9 @@ pre .chunk {
     font-size: 1.1rem;
 }
 
+.gutter {
+    display: none;
+}
 
 /* ==========================================================================
    7. Pagination - Tools to let you flick between pages
