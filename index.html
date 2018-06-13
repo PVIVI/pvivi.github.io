@@ -46,6 +46,10 @@
                                 <div class="mp-scroll">
                                 
                                 <li class="search-archive-li">
+                                    <a href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
                                     <a href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
                                 </li>
                                 
@@ -89,7 +93,7 @@
                                 
                                 <li class="search-category-li">
                                     <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
-                                    <small>5</small>
+                                    <small>6</small>
                                 </li>
                                 
                                 </div>
@@ -108,6 +112,11 @@
                             </form>
                             <ul>
                                 <div class="mp-scroll">
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/MQ/">&nbsp;&nbsp;&nbsp;MQ</a>
+                                    <small>1</small>
+                                </li>
                                 
                                 <li class="search-tag-li">
                                     <a href="/tags/OS/">&nbsp;&nbsp;&nbsp;OS</a>
@@ -129,6 +138,16 @@
                                     <small>4</small>
                                 </li>
                                 
+                                <li class="search-tag-li">
+                                    <a href="/tags/nsq/">&nbsp;&nbsp;&nbsp;nsq</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/shell/">&nbsp;&nbsp;&nbsp;shell</a>
+                                    <small>1</small>
+                                </li>
+                                
                                 </div>
                             </ul>
                         </div>
@@ -142,6 +161,8 @@
         </nav>
         <div id="pjax">
             <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
                 
                     <a  data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
                 
@@ -159,6 +180,8 @@
                     <a data-pjax href="/categories/learning/">&nbsp;&nbsp;learning</a>
                 
                 
+                    <a data-pjax href="/tags/MQ/">&nbsp;&nbsp;MQ</a>
+                
                     <a data-pjax href="/tags/OS/">&nbsp;&nbsp;OS</a>
                 
                     <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
@@ -166,6 +189,10 @@
                     <a data-pjax href="/tags/cache/">&nbsp;&nbsp;cache</a>
                 
                     <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                    <a data-pjax href="/tags/nsq/">&nbsp;&nbsp;nsq</a>
+                
+                    <a data-pjax href="/tags/shell/">&nbsp;&nbsp;shell</a>
                 
                 <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
             </div>
@@ -200,6 +227,41 @@
   
 <main class="content" role="main">
 
+    
+    <article class="post">
+
+        <header class="post-header">
+            <div class="tag-tile">
+                
+                
+                <a data-pjax href='/tags/nsq/'>nsq</a>
+                
+                <a data-pjax href='/tags/MQ/'>MQ</a>
+                
+                
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title" id="/2018/05/22/nsq源码阅读-NSQD/"><a data-pjax href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2018-05-22T01:11:17.000Z"
+                      itemprop="datePublished">2018-05-22</time>
+                <span class="post-meta-divider">|</span>
+                Views<span class="fa fa-eye"></span>
+                <x class="leancloud-visitors-count" id="/2018/05/22/nsq源码阅读-NSQD/"></x>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p><strong>NSQ</strong> 是实时的分布式消息处理平台，其设计的目的是用来大规模地处理每天数以十亿计级别的消息。NSQ 具有<strong>分布式</strong>和<strong>去中心化</strong>拓扑结构，该结构具有无单点故障、故障容错、高可用性以及能够保证消息的可靠传递的特征。上面是NSQ的官方介绍，简单的来说，NSQ就是一个消息队列(MQ)。由于笔者的工作环境大量用到NSQ，为了理解在使用过程中遇到的一些坑，也因为出于兴趣，因此有了本文的诞生。<br>
+                
+            </p>
+            
+        </section>
+    </article>
     
     <article class="post">
 
@@ -244,9 +306,9 @@
             <div class="tag-tile">
                 
                 
-                <a data-pjax href='/tags/cache/'>cache</a>
-                
                 <a data-pjax href='/tags/OS/'>OS</a>
+                
+                <a data-pjax href='/tags/cache/'>cache</a>
                 
                 
                 <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
@@ -382,6 +444,8 @@
                 
                 
                 <a data-pjax href='/tags/linux/'>linux</a>
+                
+                <a data-pjax href='/tags/shell/'>shell</a>
                 
                 
                 <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>

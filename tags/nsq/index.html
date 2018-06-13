@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>虚拟内存 | pan D.wei&#39;s Blog</title>
+  <title>Tag: nsq | pan D.wei&#39;s Blog</title>
   <meta name="description" content="" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="MobileOptimized" content="320" />
@@ -204,7 +204,7 @@
                 
                 <div id="nav-container">
                     <div class="post-navbar" style="line-height: 63px;display:none">
-                        <li id="navbar-title"><a href="#">虚拟内存</a></li>
+                        <li id="navbar-title"><a href="#"></a></li>
                         <li id="navbar-toc" style="border-left: none">
                             <a style="padding-right: 15px">
                                 <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
@@ -222,67 +222,52 @@
             <div class="scroller-inner">
 
 <!-- -->
-<!--<body class="post-template">-->
+<!--<body class="home-template">-->
 <!---->
   
 <main class="content" role="main">
-    <article class="post" >
-    <span class="post-meta">
-                  <div class="tag-tile">
-                      
-                      
-                      <a data-pjax href='/tags/OS/' style='color:#D5D5D5'>OS</a>
-                      
-                      <a data-pjax href='/tags/cache/' style='color:#D5D5D5'>cache</a>
-                      
-                      
-                  </div>
-                <h1 class="post-title" style="margin: 14px 0;color:#50585D">虚拟内存</h1>
 
-                    <div class="post-meta">
-                        Post on<span class="fa fa-clock-o"></span>
-                        <time datetime="2018-03-16T04:17:20.000Z"
-                              itemprop="datePublished">2018-03-16</time>
-                        
-                        <span class="post-meta-divider">|</span>     
-                        Views<span class="fa fa-eye"></span>
-                        <x class="leancloud-visitors-count"></x>
-                    </div>     
-    </span>
-        <section id="/2018/03/16/虚拟内存/" class="post-content">
-            <p>不知道大家是否有思考过为什么我们的计算机除了运行操作系统外，还可以同时运行多个程序？大部分人一般是从cpu的角度来考虑的，如果是单核计算机，通过<code>并发</code>技术，快速的在不同的进程间切换，让用户感觉多个进程在好像在同时运行；如果是多核计算机，除了可以并发外，每个核之间还能<code>并行</code>处理，真正的达到了同时处理多个程序的目的。我们都说计算机运行中的程序都存在内存中，但是在当今随便一个程序就上百M，甚至有的游戏已经达到好几G的情况下，操作系统是如何实现同时运行多个程序的呢？这里就涉及到虚拟内存技术，简单的说虚拟内存就是计算机利用硬件和软件资源，将暂时不需要的数据存在硬盘空间中，需要时再交换进内存空间。由于我们的硬盘空间相比于主存大了很大，弥补了主存空间不足的缺陷，达到同时运行多个程序的目的。<br><a id="more"></a><br>虚拟存储器为每一个进程提供了一个大的，一致的和私有的地址空间。虚拟存储器提供了三个重要的能力：</p>
-<ul>
-<li>它将主存看成是一个存储在磁盘上的地址空间的高速缓存，在主存中只保存活动区域，并根据需要在磁盘和主存之间回传数据，通过这种方式，它高效的使用了主存。</li>
-<li>它为每一个进程提供了一致的地址空间，从而简化了存储器管理。</li>
-<li>它包含了每一个进程的地址空间不被其他进程破坏。</li>
-</ul>
-<h2 id="虚拟内存如何工作？"><a href="#虚拟内存如何工作？" class="headerlink" title="虚拟内存如何工作？"></a>虚拟内存如何工作？</h2><p>计算机主存的每个字节都被赋予了一个地址，cpu在执行某条指令时，生成一个有效的物理地址，通过存储总线传递给主存，拿到从该物理地址开始的4个字节的字，这个过程叫做<code>物理寻址</code>。在使用虚拟内存技术后，cpu生成的是一个虚拟地址。这个虚拟地址在传送到主存之前，会先通过<code>存储器管理单元</code>进行查表，将虚拟地址转换成适当的物理地址（<code>地址翻译</code>），然后才取到数据。</p>
-<p>虚拟内存技术将虚拟内存和物理内存分成了一个个固定大小的块，称为<code>页</code>。通过复杂的地址映射算法将虚拟地址映射到物理存储器上。当需要某一个数据A时，会将A所在的虚拟页一起调度进物理内存对应的物理页上。当CPU需要某数据，而DRAM缓存不命中时，会发生缺页中断。页面调度算法在此时发生作用，会从硬盘找到数据在写入到物理内存，如果此时物理内存不够，换言之物理内存的每一页都有数据了，那就会将某一页写回到硬盘上，腾出空间。</p>
-<p>以上只是简单的叙述虚拟内存的工作方式，详细的页面调度算法，地址转换等没有展开。</p>
-<h2 id="为什么可以将数据存到硬盘？"><a href="#为什么可以将数据存到硬盘？" class="headerlink" title="为什么可以将数据存到硬盘？"></a>为什么可以将数据存到硬盘？</h2><p>这里涉及到计算机领域比较重要的一个概念：<code>局部性原理</code>。局部性原理是指程序在执行时呈现出局部性规律，主要体现在<code>空间局部性</code>和<code>时间局部性</code>上。</p>
-<p>时间局部性：被访问过一次的数据块在未来很有可能被多次访问。</p>
-<p>空间局部性：如果一个数据块被访问，将来这个数据块附近的位置也很有可能被访问。</p>
-<p>我们宏观的看计算机存储的体系架构，一个带有三级缓存的计算机，它从L0，L1，L2到主存（DRAM），硬盘空间，速度是越来越慢，但是存储空间是越来越大的，整体呈现一个金字塔形状。每一个层级之间都利用了局部性原理。当cpu需要一个数据时，会首先访问L0，如果L0没用命中数据，则继续访问L1，以此类推，最坏情况下是从硬盘拿。现在假设我们在硬盘上找到数据了，内存管理系统会将这个数据所在的块一次加载入内存。由于从硬盘加载数据到主存（DRAM），和从DRAM加载数据到SRAM的速度相比慢了非常多（具体多少也不太清楚， 参考<code>深入理解计算机系统</code>的数据是DRAM的速度比磁盘快100000倍，SRAM比DRAM快10倍），因此从硬盘加载虚拟页到DRAM往往是比较大的一块，一般是4KB~2MB。然后需要的数据又被加载进L2，L1，L0缓存，由于L0的速度非常快能够跟上cpu的速度。因此，我们说，局部性好的程序速度会更快，因为cpu能直接从L0获取到“热数据”。做一个简单的比喻，假设我们在图书馆查阅资料，我们肯定是先找到某一领域的书籍所在的楼层，然后找到书架，最后找到几本合适的书籍取回到自己书桌上翻阅。查看这几本书籍的速度肯定是比较快的，因为就在手边，随时可看，如果我们需要其他书籍那就得重新找一遍。</p>
+    
+    <article class="post">
 
+        <header class="post-header">
+            <div class="tag-tile">
+                
+                
+                <a data-pjax href='/tags/nsq/'>nsq</a>
+                
+                <a data-pjax href='/tags/MQ/'>MQ</a>
+                
+                
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title" id="/2018/05/22/nsq源码阅读-NSQD/"><a data-pjax href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2018-05-22T01:11:17.000Z"
+                      itemprop="datePublished">2018-05-22</time>
+                <span class="post-meta-divider">|</span>
+                Views<span class="fa fa-eye"></span>
+                <x class="leancloud-visitors-count" id="/2018/05/22/nsq源码阅读-NSQD/"></x>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p><strong>NSQ</strong> 是实时的分布式消息处理平台，其设计的目的是用来大规模地处理每天数以十亿计级别的消息。NSQ 具有<strong>分布式</strong>和<strong>去中心化</strong>拓扑结构，该结构具有无单点故障、故障容错、高可用性以及能够保证消息的可靠传递的特征。上面是NSQ的官方介绍，简单的来说，NSQ就是一个消息队列(MQ)。由于笔者的工作环境大量用到NSQ，为了理解在使用过程中遇到的一些坑，也因为出于兴趣，因此有了本文的诞生。<br>
+                
+            </p>
+            
         </section>
-        <hr/>
-        <nav class="pagination" style="width:auto" role="pagination">
-            
-            <a data-pjax class="newer-posts" href="/2018/04/07/用redis构建分布式锁/">← Prev Post</a>
-            
-            <a class="share-button" data-original-title title>Share this Post</a>
-            
-            <a data-pjax class="older-posts" href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">Next Post →</a>
-            
-        </nav>
-        <br/>
-        <br/>
-        <section id="comment">
-            <div id="comment-box"></div>
-        </section>
-
-
     </article>
+    
+    <nav class="pagination" role="pagination">
+        
+        <span class="page-number">Page 1 of 1</span>
+        
+    </nav>
 </main>
 
 
