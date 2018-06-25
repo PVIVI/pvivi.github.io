@@ -97,7 +97,7 @@
                                 
                                 <li class="search-category-li">
                                     <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
-                                    <small>6</small>
+                                    <small>8</small>
                                 </li>
                                 
                                 </div>
@@ -255,6 +255,7 @@
     </span>
         <section id="/2018/06/20/链表排序/" class="post-content">
             <p>这几天遇到一道算法题<a href="https://leetcode.com/problems/sort-list/description/" target="_blank" rel="noopener">sort list</a>，说是要对一个链表进行排序，要求时间复杂度是O(NlogN)并且空间复杂度是常量的。一直以来，我关注比较多的是对数组的排序，比如快速排序，堆排序等等，对链表排序还真没有仔细思考过，看到这个题目觉得比较有趣所以决定记录下来。其实题目并不难，因为时间复杂度为O(NlogN)的排序算法我们都是有概念的，除了刚才说的快速排序和堆排序外，比较常见的还有归并排序。</p>
+<a id="more"></a>
 <h2 id="1-算法分析"><a href="#1-算法分析" class="headerlink" title="1. 算法分析"></a>1. 算法分析</h2><p>链表排序基本上就是两种方式，一种是重组节点，另一种是保持链表结构不变，只是交换各个节点的值。下面我们简单的回顾一下几个排序的过程，看看这些算法是否可以直接用在链表结构上。这里描述的都是按照递增顺序进行排序的过程。</p>
 <h3 id="1-1-快速排序"><a href="#1-1-快速排序" class="headerlink" title="1.1 快速排序"></a>1.1 快速排序</h3><ol>
 <li>如果数组为空直接返回，不为空则继续下面的步骤</li>

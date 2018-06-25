@@ -97,7 +97,7 @@
                                 
                                 <li class="search-category-li">
                                     <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
-                                    <small>6</small>
+                                    <small>8</small>
                                 </li>
                                 
                                 </div>
@@ -240,6 +240,39 @@
             <div class="tag-tile">
                 
                 
+                <a data-pjax href='/tags/algorithm/'>algorithm</a>
+                
+                
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title" id="/2018/06/20/链表排序/"><a data-pjax href="/2018/06/20/链表排序/">链表排序</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2018-06-20T01:23:38.000Z"
+                      itemprop="datePublished">2018-06-20</time>
+                <span class="post-meta-divider">|</span>
+                Views<span class="fa fa-eye"></span>
+                <x class="leancloud-visitors-count" id="/2018/06/20/链表排序/"></x>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p>这几天遇到一道算法题<a href="https://leetcode.com/problems/sort-list/description/" target="_blank" rel="noopener">sort list</a>，说是要对一个链表进行排序，要求时间复杂度是O(NlogN)并且空间复杂度是常量的。一直以来，我关注比较多的是对数组的排序，比如快速排序，堆排序等等，对链表排序还真没有仔细思考过，看到这个题目觉得比较有趣所以决定记录下来。其实题目并不难，因为时间复杂度为O(NlogN)的排序算法我们都是有概念的，除了刚才说的快速排序和堆排序外，比较常见的还有归并排序。</p>
+                
+            </p>
+            
+        </section>
+    </article>
+    
+    <article class="post">
+
+        <header class="post-header">
+            <div class="tag-tile">
+                
+                
                 <a data-pjax href='/tags/nsq/'>nsq</a>
                 
                 <a data-pjax href='/tags/MQ/'>MQ</a>
@@ -263,6 +296,43 @@
             <p>
                 
                 <p><strong>NSQ</strong> 是实时的分布式消息处理平台，其设计的目的是用来大规模地处理每天数以十亿计级别的消息。NSQ 具有<strong>分布式</strong>和<strong>去中心化</strong>拓扑结构，该结构具有无单点故障、故障容错、高可用性以及能够保证消息的可靠传递的特征。上面是NSQ的官方介绍，简单的来说，NSQ就是一个消息队列(MQ)。由于笔者的工作环境大量用到NSQ，为了理解在使用过程中遇到的一些坑，也因为出于兴趣，因此研究一下nsq的源码。<br>
+                
+            </p>
+            
+        </section>
+    </article>
+    
+    <article class="post">
+
+        <header class="post-header">
+            <div class="tag-tile">
+                
+                
+                <a data-pjax href='/tags/algorithm/'>algorithm</a>
+                
+                <a data-pjax href='/tags/linux/'>linux</a>
+                
+                <a data-pjax href='/tags/cache/'>cache</a>
+                
+                
+                <span class="fa fa-bookmark" style="float:right;color:#f39c12"></span>
+            </div>
+            <h1 class="post-title" id="/2018/04/07/用redis构建分布式锁/"><a data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+            </h1>
+
+            <div class="post-meta">
+                Post on<span class="fa fa-clock-o"></span>
+                <time datetime="2018-04-07T04:37:58.000Z"
+                      itemprop="datePublished">2018-04-07</time>
+                <span class="post-meta-divider">|</span>
+                Views<span class="fa fa-eye"></span>
+                <x class="leancloud-visitors-count" id="/2018/04/07/用redis构建分布式锁/"></x>
+            </div>
+        </header>
+        <section class="post-excerpt">
+            <p>
+                
+                <p>为什么要使用redis来实现一个分布式锁？一个比较主要的原因是和分布式系统的<code>范围</code>有关[1]。多线程中也有锁，可以使多个线程进行排他性访问，避免资源竞争，最终达到数据一致，但是这个锁仅在线程间可见。而在分布式系统架构中，各个节点通过网络连接，要确保各节点间的排他性访问不论是操作系统级别的锁还是编程语言级别的锁都将失效。
                 
             </p>
             
