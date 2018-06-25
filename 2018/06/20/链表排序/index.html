@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>链表排序 | pan D.wei&#39;s Blog</title>
+  <meta name="description" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/component.css" />
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <meta name="generator" content="pan D.wei's Blog">
+  <script src="http://static.duoshuo.com/embed.js"></script>
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WlEt6BpzYCC3DYc6BA8Gm34p-gzGzoHsz", "j8XNnOegrpFwzRM8seXAekgf");</script>
+
+  
+  
+  
+
+  
+  
+</head>
+<body>
+<div class="container">
+    <div class="mp-pusher" id="mp-pusher">
+        <i id="scroll-up" class="fa fa-angle-up"></i>
+        <nav id="mp-menu" class="mp-menu">
+            <div class="mp-level">
+                <a data-pjax class="back-home" style="font-size: 20px" href="/"><h2 ><i class="fa fa-home"></i>
+                        Home</h2></a>
+                <ul class="first-level">
+                    <li>
+                        <a class="fa fa-archive" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Archive</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-archive"></i>
+                                Archive</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-archive" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/06/20/链表排序/">链表排序</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/">nsq源码阅读与常见问题分析-NSQD</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2016/03/31/Linux-Command/">Linux Command</a>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-copy" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Categories</a>
+
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-copy"></i>
+                                Categories</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-category" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-category-li">
+                                    <a href="/categories/learning/">&nbsp;&nbsp;&nbsp;learning</a>
+                                    <small>6</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="fa fa-tags" href="#"><i class="fa fa-angle-left">
+                            </i>&nbsp;&nbsp;Tags</a>
+                        <div class="mp-level page-list">
+                            <h2 ><i class="fa fa-tags"></i>
+                                Tags</h2>
+                            <a class="mp-back" href="#">back</a>
+                            <form id="search-form" action="">
+                                <input type="text" class="search search-tag" placeholder="Search.."/>
+                            </form>
+                            <ul>
+                                <div class="mp-scroll">
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/MQ/">&nbsp;&nbsp;&nbsp;MQ</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/OS/">&nbsp;&nbsp;&nbsp;OS</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
+                                    <small>4</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/cache/">&nbsp;&nbsp;&nbsp;cache</a>
+                                    <small>2</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/linux/">&nbsp;&nbsp;&nbsp;linux</a>
+                                    <small>4</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/nsq/">&nbsp;&nbsp;&nbsp;nsq</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                <li class="search-tag-li">
+                                    <a href="/tags/shell/">&nbsp;&nbsp;&nbsp;shell</a>
+                                    <small>1</small>
+                                </li>
+                                
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li><a class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a></li>
+
+                </ul>
+
+            </div>
+        </nav>
+        <div id="pjax">
+            <div class="pjax-hidden" style="display: none">
+                
+                    <a  data-pjax href="/2018/06/20/链表排序/">链表排序</a>
+                
+                    <a  data-pjax href="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/">nsq源码阅读与常见问题分析-NSQD</a>
+                
+                    <a  data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
+                
+                    <a  data-pjax href="/2018/03/16/虚拟内存/">虚拟内存</a>
+                
+                    <a  data-pjax href="/2017/12/27/API限流策略与Tocken-Bucket算法实现/">API限流策略与Tocken Bucket算法实现</a>
+                
+                    <a  data-pjax href="/2017/11/25/使用nginx分流进行A-B测试/">使用nginx分流进行A/B测试</a>
+                
+                    <a  data-pjax href="/2017/06/20/Median-of-Two-Sorted-Arrays/">Median of Two Sorted Arrays</a>
+                
+                    <a  data-pjax href="/2016/03/31/Linux-Command/">Linux Command</a>
+                
+                
+                    <a data-pjax href="/categories/learning/">&nbsp;&nbsp;learning</a>
+                
+                
+                    <a data-pjax href="/tags/MQ/">&nbsp;&nbsp;MQ</a>
+                
+                    <a data-pjax href="/tags/OS/">&nbsp;&nbsp;OS</a>
+                
+                    <a data-pjax href="/tags/algorithm/">&nbsp;&nbsp;algorithm</a>
+                
+                    <a data-pjax href="/tags/cache/">&nbsp;&nbsp;cache</a>
+                
+                    <a data-pjax href="/tags/linux/">&nbsp;&nbsp;linux</a>
+                
+                    <a data-pjax href="/tags/nsq/">&nbsp;&nbsp;nsq</a>
+                
+                    <a data-pjax href="/tags/shell/">&nbsp;&nbsp;shell</a>
+                
+                <a data-pjax class="fa fa-user" href="/about">&nbsp;&nbsp;&nbsp;About me</a>
+            </div>
+            <nav class="nexus">
+                <li  style="border-left: 1px solid #c6d0da;">
+                    <a id="trigger" href="#"><i class="fa fa-bars"></i></a>
+                </li>
+                <li ><a id="nexus-back" data-pjax href="/">pan D.wei&#39;s Blog</a></li>
+                
+                <div id="nav-container">
+                    <div class="post-navbar" style="line-height: 63px;display:none">
+                        <li id="navbar-title"><a href="#">链表排序</a></li>
+                        <li id="navbar-toc" style="border-left: none">
+                            <a style="padding-right: 15px">
+                                <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
+                            </a>
+                            <div class="hidden-box">
+                                <ul id="toc"></ul>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                
+            </nav>
+
+            <div class="scroller">
+            <div class="scroller-inner">
+
+<!-- -->
+<!--<body class="post-template">-->
+<!---->
+  
+<main class="content" role="main">
+    <article class="post" >
+    <span class="post-meta">
+                  <div class="tag-tile">
+                      
+                      
+                      <a data-pjax href='/tags/algorithm/' style='color:#D5D5D5'>algorithm</a>
+                      
+                      
+                  </div>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">链表排序</h1>
+
+                    <div class="post-meta">
+                        Post on<span class="fa fa-clock-o"></span>
+                        <time datetime="2018-06-20T01:23:38.000Z"
+                              itemprop="datePublished">2018-06-20</time>
+                        
+                        <span class="post-meta-divider">|</span>     
+                        Views<span class="fa fa-eye"></span>
+                        <x class="leancloud-visitors-count"></x>
+                    </div>     
+    </span>
+        <section id="/2018/06/20/链表排序/" class="post-content">
+            <p>这几天遇到一道算法题<a href="https://leetcode.com/problems/sort-list/description/" target="_blank" rel="noopener">sort list</a>，说是要对一个链表进行排序，要求时间复杂度是O(NlogN)并且空间复杂度是常量的。一直以来，我关注比较多的是对数组的排序，比如快速排序，堆排序等等，对链表排序还真没有仔细思考过，看到这个题目觉得比较有趣所以决定记录下来。其实题目并不难，因为时间复杂度为O(NlogN)的排序算法我们都是有概念的，除了刚才说的快速排序和堆排序外，比较常见的还有归并排序。</p>
+<h2 id="1-算法分析"><a href="#1-算法分析" class="headerlink" title="1. 算法分析"></a>1. 算法分析</h2><p>链表排序基本上就是两种方式，一种是重组节点，另一种是保持链表结构不变，只是交换各个节点的值。下面我们简单的回顾一下几个排序的过程，看看这些算法是否可以直接用在链表结构上。这里描述的都是按照递增顺序进行排序的过程。</p>
+<h3 id="1-1-快速排序"><a href="#1-1-快速排序" class="headerlink" title="1.1 快速排序"></a>1.1 快速排序</h3><ol>
+<li>如果数组为空直接返回，不为空则继续下面的步骤</li>
+<li>选取数组中的一个值K（一般是第一个）作为基准值</li>
+<li>遍历一次数组，根据基准值K将数组划分为两部分，前半部分的值全部小于K，后半部分的值都大于等于K。</li>
+<li>除K以外的前半部分和后半部分重复步骤1-4。最终得到一个有序数组。</li>
+</ol>
+<p>快速排序的关键在于划分数组算法partition。如果partition算法针对链表有效的话，那么快排就可以使用在链表上。partition算法有两种，一种是设置两个游标从数组两端往中间缩进，中途交换数组中的值，将比基准值K小的放在数组前面，比K大的放在后面；另一种也是通过两个游标，但是这次不是往中间缩进，而是都从左往右移动，类似冒泡排序，将比较小的值保留在数组前端，较大的值沉淀到数组后端。两个算法在其他地方都有很详细的介绍，这里就不过多描述了，可以参考本篇<a href="https://www.cnblogs.com/banyu/p/6660276.html" target="_blank" rel="noopener">文章</a>。由于我们这里说的是单向链表排序，所以第一种partition算法并不适用，因为我们没办法设置一个指针让它往回走。第二种partition算法是可以的，因为两个指针增长的方向一样，都是往前走。这样一来，链表排序其实跟普通的数组排序也就没什么差别了，因为这里我们并不需要去重组节点，只需要交换各个节点的值，最终达到有序即可。如下代码，q_sort实现了链表快排，使用上只需要传入链表的头指针即可，如q_sort(head, nil)。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">partition</span><span class="params">(head *ListNode, end *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	p := head</span><br><span class="line">	value := p.Val</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> q := head.Next; q != end; q = q.Next &#123;</span><br><span class="line">		<span class="keyword">if</span> q.Val &lt; value &#123;</span><br><span class="line">			tmp := p.Val</span><br><span class="line">			p.Val = q.Val</span><br><span class="line">			q.Val = tmp</span><br><span class="line">			p = p.Next</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> p</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">q_sort</span><span class="params">(head *ListNode, end *ListNode)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> head == <span class="literal">nil</span> || head.Next == end &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	p := partition(head, end)</span><br><span class="line">	<span class="keyword">if</span> p == head &#123;</span><br><span class="line">		p = p.Next</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	q_sort(head, p)</span><br><span class="line">	q_sort(p, end)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-归并排序"><a href="#1-2-归并排序" class="headerlink" title="1.2 归并排序"></a>1.2 归并排序</h3><ol>
+<li>如果数组为空或者长度为1，直接返回原数组</li>
+<li>将数组平分成两个子数组A和B</li>
+<li>对A和B分别进行排序得到A’和B’</li>
+<li>将A’和B’重新组合成一个新的有序数组</li>
+<li>对A和B递归运行2-4</li>
+</ol>
+<p>归并排序的中心思想就是分治，将数组递归的划分成两个数组，并且分别调整两个数组的顺序，最后在合并两个有序数组。从直观上来说，这个算法更适合链表排序，因为合并两个有序链表的操作对于链表来说比较容易实现，而且开销很小。我们只需要新申请一个head节点，然后每次对比两个链表的头节点的值，将值更小的节点放到head所在链表的最末尾即可。如何将链表划分成长度尽量相等的两个单链表呢？快慢指针可以解决问题，定义两个指针，快指针每次走两步，慢指针每次走一步，当快指针到链表末尾时，慢指针正好到链表中间的部位。我们不需要区分链表节点数是奇数或者偶数的情况，因为我们想要达到的目的是将链表划分成长度<strong>基本相同</strong>的两个单链表，因为长度基本相同的划分结果就是递归基本符合完全二叉树。当然，划分的不相等也可以，只是这样递归的话，就不是一个完全二叉树了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mid</span><span class="params">(head *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">    <span class="comment">// 使用快慢指针将链表划分成两部分，并且断开</span></span><br><span class="line">	q := head</span><br><span class="line">	pre := head</span><br><span class="line">	<span class="keyword">for</span> p := q.Next; p != <span class="literal">nil</span>; &#123;</span><br><span class="line">		pre = q</span><br><span class="line">		q = q.Next</span><br><span class="line"></span><br><span class="line">		p = p.Next</span><br><span class="line">		<span class="keyword">if</span> p == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		p = p.Next</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 断开</span></span><br><span class="line">	pre.Next = <span class="literal">nil</span></span><br><span class="line">	<span class="keyword">return</span> q</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">merge</span><span class="params">(head1 *ListNode, head2 *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">    <span class="comment">// 合并两个有序单链表</span></span><br><span class="line">	tmp := &amp;ListNode&#123;<span class="number">0</span>, <span class="literal">nil</span>&#125;</span><br><span class="line">	head := tmp</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> head1 != <span class="literal">nil</span> &amp;&amp; head2 != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> head1.Val &lt; head2.Val &#123;</span><br><span class="line">			head.Next = head1</span><br><span class="line">			head1 = head1.Next</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			head.Next = head2</span><br><span class="line">			head2 = head2.Next</span><br><span class="line">		&#125;</span><br><span class="line">		head = head.Next</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> head1 != <span class="literal">nil</span> &#123;</span><br><span class="line">		head.Next = head1</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> head2 != <span class="literal">nil</span> &#123;</span><br><span class="line">		head.Next = head2</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> tmp.Next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">sortList</span><span class="params">(head *ListNode)</span> *<span class="title">ListNode</span></span> &#123;</span><br><span class="line">	mid_pos := mid(head)</span><br><span class="line">	<span class="keyword">if</span> mid_pos == head &#123;</span><br><span class="line">		<span class="keyword">return</span> head</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 递归划分左半部分</span></span><br><span class="line">	p1 := sortList(head)</span><br><span class="line">    <span class="comment">// 递归划分右半部分</span></span><br><span class="line">	p2 := sortList(mid_pos)</span><br><span class="line">    <span class="comment">// 合并左右两部分</span></span><br><span class="line">	<span class="keyword">return</span> merge(p1, p2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-堆排序"><a href="#1-3-堆排序" class="headerlink" title="1.3 堆排序"></a>1.3 堆排序</h3><p>利用大根堆或者小根堆的特点，首先对待排序数组建堆，然后不断调整堆达到有序。在数组的堆排序中，我们将数组array抽象成一棵完全二叉树，对于节点array[i]，它的左孩子和右孩子如果存在的话分别是array[2*i+1]，array[2*i+2]。由于有这层抽象的存在，而且数组具有随机存取的特点，在数组中使用堆排序基本上不需要额外的空间。但是链表是顺序存取的，为了获取到第n个节点，我们必须先获取第n-1个节点。如果直接构造一个树形结构，需要O(n)的空间开销，不符合常量空间的要求。因此，堆排序基本上不能直接用在链表上。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>上面用golang实现的链表快速排序和归并排序，耗时分别是204 ms和16 ms，差别在10倍以上。这也说明了，对于链表结构，快速排序做了大量的交换工作会导致性能损耗，而归并排序只是修改链表指向，效率上高很多。间接说明了链表结构其实是非常适合插入删除的。</p>
+
+        </section>
+        <hr/>
+        <nav class="pagination" style="width:auto" role="pagination">
+            
+            <a style="cursor:default" class="newer-posts" href="#">This is the First Post</a>
+            
+            <a class="share-button" data-original-title title>Share this Post</a>
+            
+            <a data-pjax class="older-posts" href="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/">Next Post →</a>
+            
+        </nav>
+        <br/>
+        <br/>
+        <section id="comment">
+            <div id="comment-box"></div>
+        </section>
+
+
+    </article>
+</main>
+
+
+  
+<footer class="site-footer">
+    
+    <div class="inner">
+        <section class="copyright"><a href="/"></a> &copy; pan D.wei's Blog 2016</section>
+    </div>
+</footer>
+</div>
+</div><!-- /scroller -->
+
+</div><!-- /pusher -->
+</div><!-- /container -->
+</div>
+
+<!-- Easter eggs -->
+
+<div class="egg animated">
+    <a id="close-button" href="#">X</a>
+    <div class="block">
+        <div class="loading">
+            <span class="ball1"></span>
+            <span class="ball2"></span>
+        </div>
+    </div>
+</div>
+
+  
+<script src="//cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    if (!window.jQuery) {
+        var script = document.createElement('script');
+        script.src = "/js/jquery.min.js";
+        document.body.appendChild(script);
+    }
+</script>
+<script type="text/javascript" src="/js/lean-analystics.js"></script>
+<script type="text/javascript" src="/js/lib.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+
+
+
+
+</body>
+</html>

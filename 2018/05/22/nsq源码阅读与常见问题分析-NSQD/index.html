@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>nsq源码阅读-NSQD | pan D.wei&#39;s Blog</title>
+  <title>nsq源码阅读与常见问题分析-NSQD | pan D.wei&#39;s Blog</title>
   <meta name="description" content="" />
   <meta name="HandheldFriendly" content="True" />
   <meta name="MobileOptimized" content="320" />
@@ -46,7 +46,11 @@
                                 <div class="mp-scroll">
                                 
                                 <li class="search-archive-li">
-                                    <a href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
+                                    <a href="/2018/06/20/链表排序/">链表排序</a>
+                                </li>
+                                
+                                <li class="search-archive-li">
+                                    <a href="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/">nsq源码阅读与常见问题分析-NSQD</a>
                                 </li>
                                 
                                 <li class="search-archive-li">
@@ -125,7 +129,7 @@
                                 
                                 <li class="search-tag-li">
                                     <a href="/tags/algorithm/">&nbsp;&nbsp;&nbsp;algorithm</a>
-                                    <small>3</small>
+                                    <small>4</small>
                                 </li>
                                 
                                 <li class="search-tag-li">
@@ -162,7 +166,9 @@
         <div id="pjax">
             <div class="pjax-hidden" style="display: none">
                 
-                    <a  data-pjax href="/2018/05/22/nsq源码阅读-NSQD/">nsq源码阅读-NSQD</a>
+                    <a  data-pjax href="/2018/06/20/链表排序/">链表排序</a>
+                
+                    <a  data-pjax href="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/">nsq源码阅读与常见问题分析-NSQD</a>
                 
                     <a  data-pjax href="/2018/04/07/用redis构建分布式锁/">用redis构建分布式锁</a>
                 
@@ -204,7 +210,7 @@
                 
                 <div id="nav-container">
                     <div class="post-navbar" style="line-height: 63px;display:none">
-                        <li id="navbar-title"><a href="#">nsq源码阅读-NSQD</a></li>
+                        <li id="navbar-title"><a href="#">nsq源码阅读与常见问题分析-NSQD</a></li>
                         <li id="navbar-toc" style="border-left: none">
                             <a style="padding-right: 15px">
                                 <span id="toc-content" >Introduction</span><i class="fa fa-chevron-down" ></i>
@@ -237,7 +243,7 @@
                       
                       
                   </div>
-                <h1 class="post-title" style="margin: 14px 0;color:#50585D">nsq源码阅读-NSQD</h1>
+                <h1 class="post-title" style="margin: 14px 0;color:#50585D">nsq源码阅读与常见问题分析-NSQD</h1>
 
                     <div class="post-meta">
                         Post on<span class="fa fa-clock-o"></span>
@@ -249,7 +255,7 @@
                         <x class="leancloud-visitors-count"></x>
                     </div>     
     </span>
-        <section id="/2018/05/22/nsq源码阅读-NSQD/" class="post-content">
+        <section id="/2018/05/22/nsq源码阅读与常见问题分析-NSQD/" class="post-content">
             <p><strong>NSQ</strong> 是实时的分布式消息处理平台，其设计的目的是用来大规模地处理每天数以十亿计级别的消息。NSQ 具有<strong>分布式</strong>和<strong>去中心化</strong>拓扑结构，该结构具有无单点故障、故障容错、高可用性以及能够保证消息的可靠传递的特征。上面是NSQ的官方介绍，简单的来说，NSQ就是一个消息队列(MQ)。由于笔者的工作环境大量用到NSQ，为了理解在使用过程中遇到的一些坑，也因为出于兴趣，因此研究一下nsq的源码。<br><a id="more"></a></p>
 <h2 id="1-NSQ组件简介"><a href="#1-NSQ组件简介" class="headerlink" title="1. NSQ组件简介"></a>1. NSQ组件简介</h2><p>实际上，NSQ组件包括nsqd，nsqlookupd，nsqadmin。nsqd主要用于处理服务端与客户端之间的消息收发，是NSQ的关键组件。当我们将nsqd运行起来之后，它将监听两个端口，默认配置是4150和4151，前者为客户端提供了TCP服务，后者则提供了HTTP API服务。nsqd可以单独运行不依赖于其他NSQ组件，但是我们一般会与nsqlookupd搭配使用。nsqlookupd主要用于管理NSQ的网络拓扑信息。客户端通过查询nsqlookupd可以发现新的nsqd节点，新的topic或者channel信息。nsqadmin是一个web服务，它为用户提供了可视化界面用于实时的查询nsq集群中不同消息队列的详细信息。</p>
 <h2 id="2-NSQD"><a href="#2-NSQD" class="headerlink" title="2. NSQD"></a>2. NSQD</h2><p>nsqd作为NSQ的关键组件，承担了系统中最重要的消息分发功能，因此接下的内容主要围绕nsqd展开。下图是NSQ官方文档上的一张gif图，为我们描绘的是nsqd的整体架构以及消息传递过程。不同的消息队列在NSQ中是通过topic定义的，在NSQ实例中，我们可以定义多个队列，相当于多个topic，每个topic我们可以理解为是一个队列，而每个队列下可以定义多个管道，即多个channel。客户端通过订阅channel，可以消费队列中的消息。可以有多个客户端消费同一个channel，由nsqd保证将消息传递到至少一个客户端中。因为队列中的每一条消息都会分发到该队列关联的所有channel中，因此，channel实际上起到了分隔业务的作用，不同的业务类型通过订阅同一个topic的不同channel可以做到互不干扰。</p>
@@ -316,7 +322,7 @@
         <hr/>
         <nav class="pagination" style="width:auto" role="pagination">
             
-            <a style="cursor:default" class="newer-posts" href="#">This is the First Post</a>
+            <a data-pjax class="newer-posts" href="/2018/06/20/链表排序/">← Prev Post</a>
             
             <a class="share-button" data-original-title title>Share this Post</a>
             
